@@ -109,15 +109,38 @@ _Coming Soon: Add screenshots of your application_
 
 ### 🎥 Video Demonstration
 
-**[Watch the Full Demo Video](https://your-video-link-here)**  
-_5-10 minute walkthrough of all major features_
+> **⚠️ ACTION REQUIRED**: After deploying your application, record a 5-10 minute video demonstration and add the link below!
+
+**[📺 Watch the Full Demo Video](https://youtu.be/YOUR_VIDEO_ID_HERE)** ← **UPDATE THIS LINK!**  
+_5-10 minute walkthrough showcasing all major features_
+
+**Video Requirements**:
+
+- ✅ 5-10 minutes in length
+- ✅ Show user authentication (registration & login)
+- ✅ Demonstrate Q&A system (post question, answer, voting)
+- ✅ Show live study sessions feature
+- ✅ Demonstrate AI chatbot (EduBot)
+- ✅ Show real-time features and notifications
+- ✅ Demonstrate responsive design (mobile view)
+- ✅ Explain technical stack and architecture
 
 ### 🌐 Live Application
 
-**Frontend**: [https://edulink-ug.vercel.app](https://edulink-ug.vercel.app) _(Deployment pending)_  
-**API**: [https://edulink-ug-api.onrender.com](https://edulink-ug-api.onrender.com) _(Deployment pending)_
+> **⚠️ ACTION REQUIRED**: After deployment, update these URLs with your actual deployed URLs!
 
-**Test Credentials**:
+**Frontend**: [https://YOUR-APP-NAME.vercel.app](https://YOUR-APP-NAME.vercel.app) ← **UPDATE THIS URL!**  
+**Backend API**: [https://YOUR-API-NAME.onrender.com](https://YOUR-API-NAME.onrender.com) ← **UPDATE THIS URL!**
+
+**📝 Instructions**:
+
+1. Deploy backend to Render (see `docs/DEPLOYMENT.md`)
+2. Deploy frontend to Vercel (see `docs/DEPLOYMENT.md`)
+3. Replace URLs above with your actual deployed URLs
+4. Test the live application thoroughly
+5. Create test accounts or use credentials below
+
+**Test Credentials** (create these after deployment):
 
 ```
 Student Account:
@@ -128,6 +151,15 @@ Teacher Account:
 Email: teacher@test.com
 Password: test123
 ```
+
+**Deployment Status**:
+
+- [ ] Backend deployed to Render
+- [ ] Frontend deployed to Vercel
+- [ ] Database deployed to MongoDB Atlas
+- [ ] URLs updated in README
+- [ ] Application tested and working
+- [ ] Video demonstration recorded and linked
 
 ---
 
