@@ -1,0 +1,18 @@
+
+╔═══════════════════════════════════════════════════╗
+║                                                   ║
+║        🎓 EduLink UG Server Running 🇺🇬           ║
+║                                                   ║
+║     Environment: development Mode                   ║
+║     Port: 5001                                ║
+║     Socket.IO: ✅ Enabled                         ║
+║                                                   ║
+║     For God and My Country                       ║
+║                                                   ║
+╚═══════════════════════════════════════════════════╝
+  
+✅ MongoDB Connected: localhost
+📊 Database: edulink-ug
+[0mGET /api/health [32m200[0m 23.059 ms - 121[0m
+[0mGET / [32m200[0m 3.384 ms - 100[0m
+[0mPOST /api/auth/register [32m201[0m 331.680 ms - 833[0m
