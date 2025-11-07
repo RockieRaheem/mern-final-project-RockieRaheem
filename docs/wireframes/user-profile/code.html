@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edulink User Profile</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#1193d4",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101c22",
+            "card-light": "#ffffff",
+            "card-dark": "#17262e",
+            "text-light-primary": "#111618",
+            "text-dark-primary": "#ffffff",
+            "text-light-secondary": "#617c89",
+            "text-dark-secondary": "#a0b3bd",
+            "border-light": "#dbe2e6",
+            "border-dark": "#364853",
+            "surface-light": "#f0f3f4",
+            "surface-dark": "#2a3b45",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+    }
+    .material-symbols-outlined.filled {
+      font-variation-settings: 'FILL' 1;
+    }
+  </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary">
+<div class="relative flex min-h-screen w-full flex-col group/design-root">
+<div class="flex flex-grow">
+<aside class="flex-shrink-0 w-72 bg-card-light dark:bg-card-dark p-6 shadow-sm hidden lg:flex flex-col">
+<div class="flex flex-col h-full">
+<div class="flex flex-col gap-8">
+<div class="flex flex-col items-center text-center gap-3">
+<div class="flex items-center gap-2">
+<div class="w-4 h-3 bg-black"></div>
+<div class="w-4 h-3 bg-yellow-400"></div>
+<div class="w-4 h-3 bg-red-600"></div>
+</div>
+<p class="text-xs font-semibold tracking-widest uppercase text-text-light-secondary dark:text-text-dark-secondary">For God and My Country</p>
+</div>
+<div class="flex flex-col gap-4">
+<div class="flex gap-3 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAHiyrU29vWFdRfu2THrcdJ9DuKRRigHZrZRRCZ3Fx63sDxfTh59DohoXuNttkTkkktAskwGwRrOKu7bxrTXYSDbHLcgAmQNsF1-DmcRd1Ha1os3y_9HuUUMuqm0zW-1MgF0zMKUlGh2b7D7sgKlz78N38_IBZ54M_XuDZRZBhJ1gii5g8ZcacgtIIzLl8B7LXqR9qYlx1OdtccUrD1umJkHPMYL7DkYJj0xUH-36_UlYjTI8diSWSOjcJ1gls00KWeMJqqMaMm8fE");'></div>
+<div class="flex flex-col">
+<h1 class="text-text-light-primary dark:text-text-dark-primary text-base font-bold leading-normal">John Doe</h1>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-sm font-normal leading-normal">O'Level Student</p>
+</div>
+</div>
+<nav class="flex flex-col gap-2 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 text-text-light-secondary dark:text-text-dark-secondary hover:bg-surface-light dark:hover:bg-surface-dark rounded-lg" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<p class="text-sm font-medium leading-normal">Community Feed</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-light-secondary dark:text-text-dark-secondary hover:bg-surface-light dark:hover:bg-surface-dark rounded-lg" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<p class="text-sm font-medium leading-normal">My Questions</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-light-secondary dark:text-text-dark-secondary hover:bg-surface-light dark:hover:bg-surface-dark rounded-lg" href="#">
+<span class="material-symbols-outlined">groups</span>
+<p class="text-sm font-medium leading-normal">Study Sessions</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-text-light-secondary dark:text-text-dark-secondary hover:bg-surface-light dark:hover:bg-surface-dark rounded-lg" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<p class="text-sm font-medium leading-normal">Resources</p>
+</a>
+</nav>
+</div>
+</div>
+<div class="mt-auto">
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary" href="#">
+<span class="material-symbols-outlined filled">settings</span>
+<p class="text-sm font-semibold leading-normal">Settings</p>
+</a>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 p-6 lg:p-10">
+<div class="mx-auto max-w-7xl w-full">
+<div class="flex flex-col gap-8">
+<header class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<h1 class="text-text-light-primary dark:text-text-dark-primary text-4xl font-black leading-tight tracking-[-0.033em]">Profile &amp; Settings</h1>
+<p class="text-text-light-secondary dark:text-text-dark-secondary mt-1">Manage your profile, track progress, and configure your settings.</p>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center justify-center rounded-lg h-12 px-6 bg-primary text-white text-base font-bold leading-normal shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 disabled:bg-gray-300 disabled:cursor-not-allowed w-full md:w-auto">
+<span class="material-symbols-outlined mr-2">edit</span>
+<span>Edit Profile</span>
+</button>
+<button class="items-center justify-center rounded-lg h-12 w-12 border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark text-text-light-secondary hover:text-primary hidden md:flex">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+</div>
+</header>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-1 flex flex-col gap-8">
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-sm border border-border-light dark:border-border-dark text-center">
+<img alt="User Avatar" class="w-24 h-24 rounded-full mx-auto" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHiyrU29vWFdRfu2THrcdJ9DuKRRigHZrZRRCZ3Fx63sDxfTh59DohoXuNttkTkkktAskwGwRrOKu7bxrTXYSDbHLcgAmQNsF1-DmcRd1Ha1os3y_9HuUUMuqm0zW-1MgF0zMKUlGh2b7D7sgKlz78N38_IBZ54M_XuDZRZBhJ1gii5g8ZcacgtIIzLl8B7LXqR9qYlx1OdtccUrD1umJkHPMYL7DkYJj0xUH-36_UlYjTI8diSWSOjcJ1gls00KWeMJqqMaMm8fE"/>
+<h2 class="text-xl font-bold mt-4">John Doe</h2>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">O'Level Student</p>
+<div class="mt-4 text-sm text-text-light-secondary dark:text-text-dark-secondary">
+<p>Joined: January 15, 2023</p>
+</div>
+<div class="mt-6 flex justify-center gap-4">
+<div class="text-center">
+<p class="text-2xl font-bold">125</p>
+<p class="text-xs text-text-light-secondary dark:text-text-dark-secondary">Questions Asked</p>
+</div>
+<div class="text-center">
+<p class="text-2xl font-bold">82</p>
+<p class="text-xs text-text-light-secondary dark:text-text-dark-secondary">Answers Given</p>
+</div>
+<div class="text-center">
+<p class="text-2xl font-bold">1.2k</p>
+<p class="text-xs text-text-light-secondary dark:text-text-dark-secondary">Points Earned</p>
+</div>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-sm border border-border-light dark:border-border-dark">
+<h3 class="text-lg font-bold">Achievements</h3>
+<div class="grid grid-cols-3 gap-4 mt-4">
+<div class="flex flex-col items-center text-center">
+<div class="flex items-center justify-center w-16 h-16 rounded-full bg-surface-light dark:bg-surface-dark"><span class="material-symbols-outlined text-4xl text-yellow-500">school</span></div>
+<p class="text-xs mt-2 font-medium">Science Whiz</p>
+</div>
+<div class="flex flex-col items-center text-center">
+<div class="flex items-center justify-center w-16 h-16 rounded-full bg-surface-light dark:bg-surface-dark"><span class="material-symbols-outlined text-4xl text-green-500">local_fire_department</span></div>
+<p class="text-xs mt-2 font-medium">Streak Starter</p>
+</div>
+<div class="flex flex-col items-center text-center">
+<div class="flex items-center justify-center w-16 h-16 rounded-full bg-surface-light dark:bg-surface-dark"><span class="material-symbols-outlined text-4xl text-blue-500">verified</span></div>
+<p class="text-xs mt-2 font-medium">Top Contributor</p>
+</div>
+<div class="flex flex-col items-center text-center">
+<div class="flex items-center justify-center w-16 h-16 rounded-full bg-surface-light dark:bg-surface-dark"><span class="material-symbols-outlined text-4xl text-purple-500">forum</span></div>
+<p class="text-xs mt-2 font-medium">Community Helper</p>
+</div>
+<div class="flex flex-col items-center text-center">
+<div class="flex items-center justify-center w-16 h-16 rounded-full bg-surface-light dark:bg-surface-dark text-text-light-secondary dark:text-text-dark-secondary"><span class="material-symbols-outlined text-4xl">lock</span></div>
+<p class="text-xs mt-2 font-medium">Locked Badge</p>
+</div>
+<div class="flex flex-col items-center text-center">
+<div class="flex items-center justify-center w-16 h-16 rounded-full bg-surface-light dark:bg-surface-dark text-text-light-secondary dark:text-text-dark-secondary"><span class="material-symbols-outlined text-4xl">lock</span></div>
+<p class="text-xs mt-2 font-medium">Locked Badge</p>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-2 flex flex-col gap-8">
+<div class="bg-card-light dark:bg-card-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark">
+<div class="p-6">
+<h3 class="text-lg font-bold">Settings</h3>
+</div>
+<div class="border-t border-border-light dark:border-border-dark">
+<div class="flex p-6">
+<div class="w-1/3">
+<h4 class="font-semibold">Full Name</h4>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">Your legal name.</p>
+</div>
+<div class="w-2/3">
+<input class="form-input w-full rounded-lg border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-light-primary dark:text-text-dark-primary focus:outline-none focus:ring-2 focus:ring-primary/50" type="text" value="John Doe"/>
+</div>
+</div>
+</div>
+<div class="border-t border-border-light dark:border-border-dark">
+<div class="flex p-6">
+<div class="w-1/3">
+<h4 class="font-semibold">Email Address</h4>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">Used for login and notifications.</p>
+</div>
+<div class="w-2/3">
+<input class="form-input w-full rounded-lg border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-light-primary dark:text-text-dark-primary focus:outline-none focus:ring-2 focus:ring-primary/50" type="email" value="john.doe@example.com"/>
+</div>
+</div>
+</div>
+<div class="border-t border-border-light dark:border-border-dark">
+<div class="flex p-6 items-center">
+<div class="w-1/3">
+<h4 class="font-semibold">Dark Mode</h4>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">Toggle between light and dark themes.</p>
+</div>
+<div class="w-2/3">
+<label class="relative inline-flex cursor-pointer items-center">
+<input class="peer sr-only" type="checkbox"/>
+<div class="peer h-6 w-11 rounded-full bg-border-light after:absolute after:start-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white rtl:peer-checked:after:-translate-x-full"></div>
+</label>
+</div>
+</div>
+</div>
+<div class="border-t border-border-light dark:border-border-dark">
+<div class="flex p-6">
+<div class="w-1/3">
+<h4 class="font-semibold">Education Level</h4>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">Select your current level.</p>
+</div>
+<div class="w-2/3">
+<select class="form-select w-full rounded-lg border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-light-primary dark:text-text-dark-primary focus:outline-none focus:ring-2 focus:ring-primary/50">
+<option>S.1</option>
+<option>S.2</option>
+<option selected="">S.3</option>
+<option>S.4 (O'Level)</option>
+<option>S.5</option>
+<option>S.6 (A'Level)</option>
+</select>
+</div>
+</div>
+</div>
+<div class="border-t border-border-light dark:border-border-dark p-6 flex justify-end">
+<button class="flex items-center justify-center rounded-lg h-12 px-6 bg-primary text-white text-base font-bold leading-normal shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 disabled:bg-gray-300 disabled:cursor-not-allowed">
+<span>Save Changes</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<button class="fixed bottom-6 right-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark">
+<span class="material-symbols-outlined text-4xl">smart_toy</span>
+</button>
+</div>
+
+</body></html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edulink - Ask a Question</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1193d4",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101c22",
+                        "card-light": "#ffffff",
+                        "card-dark": "#17262e",
+                        "text-light-primary": "#111618",
+                        "text-dark-primary": "#ffffff",
+                        "text-light-secondary": "#617c89",
+                        "text-dark-secondary": "#a0b3bd",
+                        "border-light": "#dbe2e6",
+                        "border-dark": "#364853",
+                        "surface-light": "#f0f3f4",
+                        "surface-dark": "#2a3b45",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+        .uganda-flag-stripe {
+            height: 4px;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary">
+<div class="relative flex min-h-screen w-full flex-col group/design-root">
+<main class="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+<div class="w-full max-w-3xl">
+<div class="flex flex-col items-center text-center mb-8">
+<div class="flex w-24 mb-3">
+<div class="w-1/3 bg-black uganda-flag-stripe"></div>
+<div class="w-1/3 bg-yellow-400 uganda-flag-stripe"></div>
+<div class="w-1/3 bg-red-600 uganda-flag-stripe"></div>
+</div>
+<h1 class="text-text-light-primary dark:text-text-dark-primary text-3xl sm:text-4xl font-black tracking-tighter">Ask the Community</h1>
+<p class="text-text-light-secondary dark:text-text-dark-secondary mt-2 max-w-md">Share your question and let fellow students and tutors help you out. Be clear and provide as much detail as possible.</p>
+</div>
+<div class="bg-card-light dark:bg-card-dark p-6 sm:p-8 rounded-xl shadow-sm border border-border-light dark:border-border-dark">
+<form class="flex flex-col gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-text-light-primary dark:text-text-dark-primary" for="question-title">Question Title</label>
+<input class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark py-2.5 px-4 text-text-light-primary dark:text-text-dark-primary placeholder:text-text-light-secondary focus:outline-none focus:ring-2 focus:ring-primary/50" id="question-title" placeholder="e.g., How to solve quadratic equations?" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-text-light-primary dark:text-text-dark-primary" for="question-details">Details</label>
+<textarea class="form-textarea w-full rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark py-2.5 px-4 text-text-light-primary dark:text-text-dark-primary placeholder:text-text-light-secondary focus:outline-none focus:ring-2 focus:ring-primary/50" id="question-details" placeholder="Explain your question in more detail. What have you tried so far?" rows="6"></textarea>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-text-light-primary dark:text-text-dark-primary">Add an Image (Optional)</label>
+<div class="relative flex flex-col items-center justify-center w-full p-6 border-2 border-dashed rounded-lg border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-4xl text-text-light-secondary dark:text-text-dark-secondary">upload_file</span>
+<p class="mt-2 text-sm text-text-light-secondary dark:text-text-dark-secondary"><span class="font-semibold text-primary">Click to upload</span> or drag and drop</p>
+<p class="text-xs text-text-light-secondary/70 dark:text-text-dark-secondary/70">SVG, PNG, JPG or GIF (max. 800x400px)</p>
+<input class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" type="file"/>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-text-light-primary dark:text-text-dark-primary" for="subject">Subject</label>
+<select class="form-select w-full rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark py-2.5 pl-4 pr-10 text-text-light-primary dark:text-text-dark-primary focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none" id="subject">
+<option disabled="" selected="">Select a subject</option>
+<option>Biology</option>
+<option>Physics</option>
+<option>Chemistry</option>
+<option>Mathematics</option>
+<option>English</option>
+<option>History</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-text-light-primary dark:text-text-dark-primary">Level</label>
+<div class="grid grid-cols-2 gap-2">
+<button class="flex items-center justify-center rounded-lg h-11 px-4 text-sm font-semibold border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-light-secondary dark:text-text-dark-secondary hover:bg-primary/10 hover:text-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-card-light dark:focus:ring-offset-card-dark focus:ring-primary/50" type="button">O'Level</button>
+<button class="flex items-center justify-center rounded-lg h-11 px-4 text-sm font-semibold border border-primary bg-primary/10 text-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-card-light dark:focus:ring-offset-card-dark focus:ring-primary/50" type="button">A'Level</button>
+</div>
+</div>
+</div>
+<div class="border-t border-border-light dark:border-border-dark pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+<p class="text-xs font-semibold tracking-widest uppercase text-text-light-secondary dark:text-text-dark-secondary order-2 sm:order-1">For God and My Country</p>
+<button class="w-full sm:w-auto order-1 sm:order-2 flex items-center justify-center rounded-lg h-12 px-6 bg-primary text-white text-base font-bold leading-normal shadow-sm hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-card-light dark:focus:ring-offset-card-dark focus:ring-primary/50" type="submit">
+<span class="material-symbols-outlined mr-2">send</span>
+<span>Submit Question</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+</main>
+<button class="fixed bottom-6 right-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark group">
+<span class="material-symbols-outlined text-4xl">smart_toy</span>
+<span class="absolute -top-2 -left-20 w-max bg-card-dark text-white text-xs font-semibold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none shadow-lg">Need help? Ask our AI assistant!</span>
+</button>
+</div>
+
+</body></html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edulink Live Discussion Room</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#1193d4",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101c22",
+            "card-light": "#ffffff",
+            "card-dark": "#17262e",
+            "text-light-primary": "#111618",
+            "text-dark-primary": "#ffffff",
+            "text-light-secondary": "#617c89",
+            "text-dark-secondary": "#a0b3bd",
+            "border-light": "#dbe2e6",
+            "border-dark": "#364853",
+            "surface-light": "#f0f3f4",
+            "surface-dark": "#2a3b45",
+            "success": "#22c55e",
+            "warning": "#f59e0b",
+            "danger": "#ef4444",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-outlined.filled {
+      font-variation-settings: 'FILL' 1;
+    }
+  </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary">
+<div class="relative flex min-h-screen w-full flex-col group/design-root">
+<div class="flex h-screen w-full flex-col">
+<header class="flex h-20 flex-shrink-0 items-center justify-between border-b border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark px-6">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<div class="w-4 h-3 bg-black"></div>
+<div class="w-4 h-3 bg-yellow-400"></div>
+<div class="w-4 h-3 bg-red-600"></div>
+</div>
+<div>
+<h1 class="text-xl font-bold">Physics A'Level: Projectile Motion</h1>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">Hosted by Mr. Atwine</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex items-center gap-2 rounded-lg bg-surface-light dark:bg-surface-dark px-3 py-1.5">
+<div class="h-2.5 w-2.5 rounded-full bg-success"></div>
+<span class="text-sm font-medium text-text-light-secondary dark:text-text-dark-secondary">01:23:45</span>
+</div>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 text-text-light-secondary dark:text-text-dark-secondary hover:bg-surface-light dark:hover:bg-surface-dark">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="flex items-center justify-center rounded-lg bg-danger px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-danger/90">
+<span class="material-symbols-outlined mr-1.5 text-base">logout</span>
+            Leave
+          </button>
+</div>
+</header>
+<div class="flex flex-1 overflow-hidden">
+<main class="flex flex-1 flex-col bg-background-light dark:bg-background-dark">
+<div class="flex-1 p-4 md:p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 relative">
+<div class="relative col-span-full h-full min-h-[200px] rounded-xl overflow-hidden bg-background-dark dark:bg-card-dark border-2 border-primary shadow-lg">
+<div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 h-full p-2">
+<div class="relative col-span-2 row-span-2 rounded-lg overflow-hidden bg-black flex items-center justify-center">
+<img alt="Host video feed" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCi-NeB-ZxmQaEWWauPgew3CbgViTjS2ji87aAcPPSgveaDTLA1UKc42Jm0s5q0A5gpBug-4E9lHJgcmTazX3tq0UTTybg7AGcJys5JL9se_AGT-_DkoV8K7Wc5BwHdpBBb5wO1Ab2XGc-S3FrIQ8y6Np3msSGzwRjHJmM2v9OSjiFsbOyZbjMSrYsT1q10rpXNnxK8gKJvHbjntHEpPxQHvq5ed9OoKkwBY-VZrrJGlqpxrwTGtArTUQHxHJl6qzPaueV5Ps8NJw"/>
+<div class="absolute bottom-2 left-2 flex items-center gap-2 rounded-lg bg-black/50 px-3 py-1.5 text-white backdrop-blur-sm">
+<span class="material-symbols-outlined text-success filled text-base">star</span>
+<span class="text-sm font-semibold">Mr. Atwine (Host)</span>
+</div>
+</div>
+<div class="relative rounded-lg overflow-hidden bg-black flex items-center justify-center">
+<img alt="Participant video feed" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q-7KVsdwlN3iKSogqEJsdzXM4kyzbsg7KhckxepxBBBo1M8bus3lR-6S3-DfHVLivn7z7RH285FHUg38HTJlCafofCTX4pySdzahdSIiLJXsyS5VjTPjXc88jJUAPl0T72J5LM-pTl3RF47RoeawnmDLFAENXoyIvo554bHBegUA22xcb6uZsitreMAf-02Xnyg0U1U1ML9d7EXHgQErMWl42WOCAT192xkn66f9XLyR63RHDYVhL0kxxibos31CGofS224e84I"/>
+<div class="absolute bottom-2 left-2 flex items-center gap-2 rounded-lg bg-black/50 px-2 py-1 text-white backdrop-blur-sm">
+<span class="text-xs font-medium">Grace N.</span>
+</div>
+<div class="absolute top-2 right-2 rounded-full bg-black/50 p-1.5 text-warning">
+<span class="material-symbols-outlined text-base filled">push_pin</span>
+</div>
+<button aria-label="Mute Grace N." class="absolute top-2 left-2 rounded-full bg-black/50 p-1.5 text-white hover:bg-black/70">
+<span class="material-symbols-outlined text-base">mic</span>
+</button>
+</div>
+<div class="relative rounded-lg overflow-hidden bg-black flex items-center justify-center">
+<img alt="Your video feed" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHiyrU29vWFdRfu2THrcdJ9DuKRRigHZrZRRCZ3Fx63sDxfTh59DohoXuNttkTkkktAskwGwRrOKu7bxrTXYSDbHLcgAmQNsF1-DmcRd1Ha1os3y_9HuUUMuqm0zW-1MgF0zMKUlGh2b7D7sgKlz78N38_IBZ54M_XuDZRZBhJ1gii5g8ZcacgtIIzLl8B7LXqR9qYlx1OdtccUrD1umJkHPMYL7DkYJj0xUH-36_UlYjTI8diSWSOjcJ1gls00KWeMJqqMaMm8fE"/>
+<div class="absolute bottom-2 left-2 flex items-center gap-2 rounded-lg bg-black/50 px-2 py-1 text-white backdrop-blur-sm">
+<span class="text-xs font-medium">John D. (You)</span>
+</div>
+<button aria-label="Mute John D." class="absolute top-2 left-2 rounded-full bg-black/50 p-1.5 text-white hover:bg-black/70">
+<span class="material-symbols-outlined text-base">mic</span>
+</button>
+</div>
+<div class="relative rounded-lg overflow-hidden bg-black flex items-center justify-center">
+<div class="absolute bottom-2 left-2 flex items-center gap-2 rounded-lg bg-black/50 px-2 py-1 text-white backdrop-blur-sm">
+<span class="text-xs font-medium">David O.</span>
+</div>
+<div class="absolute inset-0 flex items-center justify-center bg-black/50">
+<span class="material-symbols-outlined text-white/50 text-3xl">videocam_off</span>
+</div>
+<button aria-label="Unmute David O." class="absolute top-2 left-2 rounded-full bg-black/50 p-1.5 text-white hover:bg-black/70">
+<span class="material-symbols-outlined text-base text-danger">mic_off</span>
+</button>
+</div>
+<div class="relative rounded-lg overflow-hidden bg-black flex items-center justify-center">
+<div class="absolute bottom-2 left-2 flex items-center gap-2 rounded-lg bg-black/50 px-2 py-1 text-white backdrop-blur-sm">
+<span class="text-xs font-medium">Aisha N.</span>
+</div>
+<div class="absolute inset-0 flex items-center justify-center bg-black/50">
+<span class="material-symbols-outlined text-white/50 text-3xl">videocam_off</span>
+</div>
+<button aria-label="Unmute Aisha N." class="absolute top-2 left-2 rounded-full bg-black/50 p-1.5 text-white hover:bg-black/70">
+<span class="material-symbols-outlined text-base text-danger">mic_off</span>
+</button>
+</div>
+<div class="relative rounded-lg overflow-hidden bg-black flex items-center justify-center">
+<div class="absolute bottom-2 left-2 flex items-center gap-2 rounded-lg bg-black/50 px-2 py-1 text-white backdrop-blur-sm">
+<span class="text-xs font-medium">Another S.</span>
+</div>
+<div class="absolute inset-0 flex items-center justify-center bg-black/50">
+<span class="material-symbols-outlined text-white/50 text-3xl">videocam_off</span>
+</div>
+<button aria-label="Unmute Another S." class="absolute top-2 left-2 rounded-full bg-black/50 p-1.5 text-white hover:bg-black/70">
+<span class="material-symbols-outlined text-base text-danger">mic_off</span>
+</button>
+</div>
+<div class="relative rounded-lg overflow-hidden bg-black flex items-center justify-center">
+<div class="absolute bottom-2 left-2 flex items-center gap-2 rounded-lg bg-black/50 px-2 py-1 text-white backdrop-blur-sm">
+<span class="text-xs font-medium">Last S.</span>
+</div>
+<div class="absolute inset-0 flex items-center justify-center bg-black/50">
+<span class="material-symbols-outlined text-white/50 text-3xl">videocam_off</span>
+</div>
+<button aria-label="Unmute Last S." class="absolute top-2 left-2 rounded-full bg-black/50 p-1.5 text-white hover:bg-black/70">
+<span class="material-symbols-outlined text-base text-danger">mic_off</span>
+</button>
+</div>
+</div>
+<div class="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm z-10 hidden" id="overlay-content">
+<div class="bg-card-light dark:bg-card-dark rounded-xl p-6 shadow-xl w-3/4 max-w-lg">
+<h3 class="text-lg font-bold mb-4">Quick Poll: What is the primary force in Projectile Motion?</h3>
+<div class="space-y-3">
+<label class="flex items-center gap-3 bg-surface-light dark:bg-surface-dark p-3 rounded-lg cursor-pointer hover:bg-surface-light/70 dark:hover:bg-surface-dark/70">
+<input class="form-radio text-primary focus:ring-primary/50" name="poll-answer" type="radio" value="gravity"/>
+<span>Gravity</span>
+</label>
+<label class="flex items-center gap-3 bg-surface-light dark:bg-surface-dark p-3 rounded-lg cursor-pointer hover:bg-surface-light/70 dark:hover:bg-surface-dark/70">
+<input class="form-radio text-primary focus:ring-primary/50" name="poll-answer" type="radio" value="air_resistance"/>
+<span>Air Resistance</span>
+</label>
+<label class="flex items-center gap-3 bg-surface-light dark:bg-surface-dark p-3 rounded-lg cursor-pointer hover:bg-surface-light/70 dark:hover:bg-surface-dark/70">
+<input class="form-radio text-primary focus:ring-primary/50" name="poll-answer" type="radio" value="initial_velocity"/>
+<span>Initial Velocity</span>
+</label>
+</div>
+<div class="flex justify-end gap-3 mt-6">
+<button class="px-4 py-2 rounded-lg text-text-light-secondary dark:text-text-dark-secondary hover:bg-surface-light dark:hover:bg-surface-dark">Cancel</button>
+<button class="px-4 py-2 rounded-lg bg-primary text-white font-medium hover:bg-primary/90">Submit Poll</button>
+</div>
+</div>
+</div>
+</div>
+<div class="flex h-24 flex-shrink-0 items-center justify-center gap-4 border-t border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark">
+<button aria-label="Toggle Microphone" class="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary/90">
+<span class="material-symbols-outlined text-3xl">mic</span>
+</button>
+<button aria-label="Toggle Video Camera" class="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white transition-colors hover:bg-primary/90">
+<span class="material-symbols-outlined text-3xl">videocam</span>
+</button>
+<button class="flex items-center justify-center rounded-full bg-surface-light dark:bg-surface-dark text-text-light-secondary dark:text-text-dark-secondary transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 h-14 px-5 text-sm font-medium gap-2">
+<span class="material-symbols-outlined text-3xl">mic_off</span>
+            Mute All
+          </button>
+<button class="flex items-center justify-center rounded-full bg-surface-light dark:bg-surface-dark text-text-light-secondary dark:text-text-dark-secondary transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 h-14 px-5 text-sm font-medium gap-2">
+<span class="material-symbols-outlined text-3xl">pan_tool</span>
+            Raise Hand Queue (2)
+          </button>
+<button class="flex items-center justify-center rounded-full bg-surface-light dark:bg-surface-dark text-text-light-secondary dark:text-text-dark-secondary transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 h-14 px-5 text-sm font-medium gap-2">
+<span class="material-symbols-outlined text-3xl">group_add</span>
+            Breakout Rooms
+          </button>
+<button class="flex items-center justify-center rounded-full bg-surface-light dark:bg-surface-dark text-text-light-secondary dark:text-text-dark-secondary transition-colors hover:bg-gray-200 dark:hover:bg-gray-700 h-14 px-5 text-sm font-medium gap-2">
+<span class="material-symbols-outlined text-3xl">poll</span>
+            Quick Poll
+          </button>
+<button class="flex h-14 w-14 items-center justify-center rounded-full bg-surface-light dark:bg-surface-dark text-text-light-secondary dark:text-text-dark-secondary transition-colors hover:bg-gray-200 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-3xl">more_vert</span>
+</button>
+</div>
+</div></main>
+<aside class="hidden w-[360px] flex-shrink-0 border-l border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark md:flex flex-col">
+<div class="flex h-16 flex-shrink-0 border-b border-border-light dark:border-border-dark">
+<button class="flex-1 flex items-center justify-center gap-2 border-b-2 border-primary text-primary">
+<span class="material-symbols-outlined">groups</span>
+<span class="text-sm font-semibold">Participants (12)</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-2 text-text-light-secondary dark:text-text-dark-secondary hover:bg-surface-light dark:hover:bg-surface-dark">
+<span class="material-symbols-outlined">chat</span>
+<span class="text-sm font-semibold">Chat</span>
+</button>
+</div>
+<div class="flex-1 overflow-y-auto p-4">
+<div class="relative mb-4">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-text-light-secondary dark:text-text-dark-secondary">search</span>
+<input class="form-input w-full rounded-lg border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark py-2 pl-10 pr-4 placeholder:text-text-light-secondary focus:border-primary focus:ring-primary/50" placeholder="Search participants..." type="text"/>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-light dark:hover:bg-surface-dark">
+<div class="flex items-center gap-3">
+<img alt="Mr. Atwine avatar" class="h-9 w-9 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCi-NeB-ZxmQaEWWauPgew3CbgViTjS2ji87aAcPPSgveaDTLA1UKc42Jm0s5q0A5gpBug-4E9lHJgcmTazX3tq0UTTybg7AGcJys5JL9se_AGT-_DkoV8K7Wc5BwHdpBBb5wO1Ab2XGc-S3FrIQ8y6Np3msSGzwRjHJmM2v9OSjiFsbOyZbjMSrYsT1q10rpXNnxK8gKJvHbjntHEpPxQHvq5ed9OoKkwBY-VZrrJGlqpxrwTGtArTUQHxHJl6qzPaueV5Ps8NJw"/>
+<div>
+<p class="font-semibold">Mr. Atwine</p>
+<p class="text-xs text-success font-medium">Host</p>
+</div>
+</div>
+<div class="flex items-center gap-2 text-text-light-secondary dark:text-text-dark-secondary">
+<span class="material-symbols-outlined text-xl text-primary">mic</span>
+<span class="material-symbols-outlined text-xl text-primary">videocam</span>
+<button aria-label="More options for Mr. Atwine" class="h-8 w-8 rounded-full flex items-center justify-center hover:bg-surface-light dark:hover:bg-surface-dark/70">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-light dark:hover:bg-surface-dark">
+<div class="flex items-center gap-3">
+<img alt="John Doe avatar" class="h-9 w-9 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHiyrU29vWFdRfu2THrcdJ9DuKRRigHZrZRRCZ3Fx63sDxfTh59DohoXuNttkTkkktAskwGwRrOKu7bxrTXYSDbHLcgAmQNsF1-DmcRd1Ha1os3y_9HuUUMuqm0zW-1MgF0zMKUlGh2b7D7sgKlz78N38_IBZ54M_XuDZRZBhJ1gii5g8ZcacgtIIzLl8B7LXqR9qYlx1OdtccUrD1umJkHPMYL7DkYJj0xUH-36_UlYjTI8diSWSOjcJ1gls00KWeMJqqMaMm8fE"/>
+<div>
+<p class="font-semibold">John Doe (You)</p>
+</div>
+</div>
+<div class="flex items-center gap-2 text-text-light-secondary dark:text-text-dark-secondary">
+<span class="material-symbols-outlined text-xl text-primary">mic</span>
+<span class="material-symbols-outlined text-xl text-primary">videocam</span>
+<button aria-label="More options for John Doe" class="h-8 w-8 rounded-full flex items-center justify-center hover:bg-surface-light dark:hover:bg-surface-dark/70">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-light dark:hover:bg-surface-dark">
+<div class="flex items-center gap-3">
+<img alt="Grace Nakato avatar" class="h-9 w-9 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q-7KVsdwlN3iKSogqEJsdzXM4kyzbsg7KhckxepxBBBo1M8bus3lR-6S3-DfHVLivn7z7RH285FHUg38HTJlCafofCTX4pySdzahdSIiLJXsyS5VjTPjXc88jJUAPl0T72J5LM-pTl3RF47RoeawnmDLFAENXoyIvo554bHBegUA22xcb6uZsitreMAf-02Xnyg0U1U1ML9d7EXHgQErMWl42WOCAT192xkn66f9XLyR63RHDYVhL0kxxibos31CGofS224e84I"/>
+<div>
+<p class="font-semibold">Grace Nakato</p>
+</div>
+</div>
+<div class="flex items-center gap-2 text-text-light-secondary dark:text-text-dark-secondary">
+<span class="material-symbols-outlined text-xl text-danger">mic_off</span>
+<span class="material-symbols-outlined text-xl text-primary">videocam</span>
+<button aria-label="More options for Grace Nakato" class="h-8 w-8 rounded-full flex items-center justify-center hover:bg-surface-light dark:hover:bg-surface-dark/70">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-light dark:hover:bg-surface-dark">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-purple-200 flex items-center justify-center font-bold text-purple-700">
+                    DO
+                  </div>
+<div>
+<p class="font-semibold">David Okello</p>
+</div>
+</div>
+<div class="flex items-center gap-2 text-text-light-secondary dark:text-text-dark-secondary">
+<span class="material-symbols-outlined text-xl text-primary">mic</span>
+<span class="material-symbols-outlined text-xl text-danger">videocam_off</span>
+<button aria-label="More options for David Okello" class="h-8 w-8 rounded-full flex items-center justify-center hover:bg-surface-light dark:hover:bg-surface-dark/70">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg hover:bg-surface-light dark:hover:bg-surface-dark">
+<div class="flex items-center gap-3">
+<img alt="Aisha Nanteza avatar" class="h-9 w-9 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnD90rBqnGn9vvTZsanI2s4W1jQGZX5Ag1NH2QuHsh-kLJDi_QGyohPHhCwRi0-EU__JbLHsWmK0u1JjKdqSeHLtnZfBdGUVRqJilyR5Hwzz0N_keQhEa0hm3dSFy7DlOW_VqRXl6s3YPgqtaoAceMXQOPz0f3ZJPCQwelbBMdAS4lVahrfoOeT50mI0yv2hKkxJDzWW4osg1HoCT4VLtJyhG9B-3C94k7u7WrvMiSFlnAwiBKqbb-cZf0yb0EsYjcBQSyhBtBCzk"/>
+<div>
+<p class="font-semibold">Aisha Nanteza</p>
+</div>
+</div>
+<div class="flex items-center gap-2 text-text-light-secondary dark:text-text-dark-secondary">
+<span class="material-symbols-outlined text-xl text-danger">mic_off</span>
+<span class="material-symbols-outlined text-xl text-danger">videocam_off</span>
+<button aria-label="More options for Aisha Nanteza" class="h-8 w-8 rounded-full flex items-center justify-center hover:bg-surface-light dark:hover:bg-surface-dark/70">
+<span class="material-symbols-outlined text-lg">more_vert</span>
+</button>
+</div>
+</div>
+<div class="mt-6 border-t border-border-light dark:border-border-dark pt-4">
+<h3 class="font-semibold text-lg mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined filled text-warning">pan_tool</span> Raised Hands (2)
+            </h3>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-light dark:bg-surface-dark border border-warning/50">
+<div class="flex items-center gap-3">
+<img alt="Student 1 avatar" class="h-9 w-9 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q-7KVsdwlN3iKSogqEJsdzXM4kyzbsg7KhckxepxBBBo1M8bus3lR-6S3-DfHVLivn7z7RH285FHUg38HTJlCafofCTX4pySdzahdSIiLJXsyS5VjTPjXc88jJUAPl0T72J5LM-pTl3RF47RoeawnmDLFAENXoyIvo554bHBegUA22xcb6uZsitreMAf-02Xnyg0U1U1ML9d7EXHgQErMWl42WOCAT192xkn66f9XLyR63RHDYVhL0kxxibos31CGofS224e84I"/>
+<div>
+<p class="font-semibold text-warning">Grace Nakato</p>
+<p class="text-xs text-text-light-secondary dark:text-text-dark-secondary">Raised hand 1 min ago</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="Allow Grace to speak" class="h-8 w-8 rounded-full flex items-center justify-center text-primary hover:bg-surface-light dark:hover:bg-surface-dark/70">
+<span class="material-symbols-outlined text-xl">mic</span>
+</button>
+<button aria-label="Lower Grace's hand" class="h-8 w-8 rounded-full flex items-center justify-center text-text-light-secondary dark:text-text-dark-secondary hover:bg-surface-light dark:hover:bg-surface-dark/70">
+<span class="material-symbols-outlined text-xl">clear_all</span>
+</button>
+</div>
+</div>
+<div class="flex items-center justify-between p-2 rounded-lg bg-surface-light dark:bg-surface-dark border border-warning/50">
+<div class="flex items-center gap-3">
+<div class="h-9 w-9 rounded-full bg-purple-200 flex items-center justify-center font-bold text-purple-700">
+                    DO
+                  </div>
+<div>
+<p class="font-semibold text-warning">David Okello</p>
+<p class="text-xs text-text-light-secondary dark:text-text-dark-secondary">Raised hand 30 sec ago</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="Allow David to speak" class="h-8 w-8 rounded-full flex items-center justify-center text-primary hover:bg-surface-light dark:hover:bg-surface-dark/70">
+<span class="material-symbols-outlined text-xl">mic</span>
+</button>
+<button aria-label="Lower David's hand" class="h-8 w-8 rounded-full flex items-center justify-center text-text-light-secondary dark:text-text-dark-secondary hover:bg-surface-light dark:hover:bg-surface-dark/70">
+<span class="material-symbols-outlined text-xl">clear_all</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex-shrink-0 border-t border-border-light dark:border-border-dark p-4">
+<div class="text-center">
+<p class="text-xs font-semibold tracking-widest uppercase text-text-light-secondary dark:text-text-dark-secondary">For God and My Country</p>
+</div>
+</div>
+</aside>
+</div>
+</div>
+<button class="fixed bottom-6 right-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark">
+<span class="material-symbols-outlined text-4xl">smart_toy</span>
+</button>
+</div>
+</body></html>

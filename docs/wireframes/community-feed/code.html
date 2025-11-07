@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edulink Community Feed</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#4F46E5",
+                        "primary-hover": "#4338CA",
+                        "primary-light": "#EEF2FF",
+                        "background-light": "#F8FAFC",
+                        "background-dark": "#0B1120",
+                        "card-light": "#FFFFFF",
+                        "card-dark": "#1E293B",
+                        "text-light-primary": "#1E293B",
+                        "text-dark-primary": "#F1F5F9",
+                        "text-light-secondary": "#64748B",
+                        "text-dark-secondary": "#94A3B8",
+                        "border-light": "#E2E8F0",
+                        "border-dark": "#334155",
+                        "surface-light": "#F1F5F9",
+                        "surface-dark": "#334155",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "full": "9999px"
+                    },
+                    boxShadow: {
+                      'subtle': '0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary">
+<div class="relative flex min-h-screen w-full flex-col group/design-root">
+<div class="flex flex-grow">
+<aside class="flex-shrink-0 w-64 bg-card-light dark:bg-card-dark p-6 hidden lg:flex flex-col border-r border-border-light dark:border-border-dark">
+<div class="flex flex-col h-full">
+<div class="flex items-center gap-3">
+<div class="flex gap-1">
+<div class="w-2.5 h-5 bg-black rounded-sm"></div>
+<div class="w-2.5 h-5 bg-yellow-400 rounded-sm"></div>
+<div class="w-2.5 h-5 bg-red-600 rounded-sm"></div>
+</div>
+<span class="font-bold text-xl tracking-tight text-text-light-primary dark:text-text-dark-primary">Edulink</span>
+</div>
+<nav class="flex flex-col gap-2 mt-10">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary-light dark:bg-primary/20 text-primary dark:text-white" href="#">
+<span class="material-symbols-outlined filled">forum</span>
+<p class="text-sm font-semibold leading-normal">Community Feed</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-text-light-secondary dark:text-text-dark-secondary hover:bg-surface-light dark:hover:bg-surface-dark rounded-lg" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<p class="text-sm font-medium leading-normal">My Questions</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-text-light-secondary dark:text-text-dark-secondary hover:bg-surface-light dark:hover:bg-surface-dark rounded-lg" href="#">
+<span class="material-symbols-outlined">groups</span>
+<p class="text-sm font-medium leading-normal">Study Sessions</p>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-text-light-secondary dark:text-text-dark-secondary hover:bg-surface-light dark:hover:bg-surface-dark rounded-lg" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+<p class="text-sm font-medium leading-normal">Resources</p>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-border-light dark:border-border-dark">
+<div class="flex flex-col gap-1">
+<p class="text-xs font-semibold tracking-widest uppercase text-text-light-secondary dark:text-text-dark-secondary text-center mb-3">For God and My Country</p>
+<a class="flex items-center gap-3 px-3 py-2.5 text-text-light-secondary dark:text-text-dark-secondary hover:bg-surface-light dark:hover:bg-surface-dark rounded-lg" href="#">
+<span class="material-symbols-outlined">settings</span>
+<p class="text-sm font-medium leading-normal">Settings</p>
+</a>
+<div class="flex gap-3 items-center mt-4 px-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAHiyrU29vWFdRfu2THrcdJ9DuKRRigHZrZRRCZ3Fx63sDxfTh59DohoXuNttkTkkktAskwGwRrOKu7bxrTXYSDbHLcgAmQNsF1-DmcRd1Ha1os3y_9HuUUMuqm0zW-1MgF0zMKUlGh2b7D7sgKlz78N38_IBZ54M_XuDZRZBhJ1gii5g8ZcacgtIIzLl8B7LXqR9qYlx1OdtccUrD1umJkHPMYL7DkYJj0xUH-36_UlYjTI8diSWSOjcJ1gls00KWeMJqqMaMm8fE");'></div>
+<div class="flex flex-col">
+<h1 class="text-text-light-primary dark:text-text-dark-primary text-sm font-semibold leading-normal">John Doe</h1>
+<p class="text-text-light-secondary dark:text-text-dark-secondary text-xs font-normal leading-normal">O'Level Student</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<main class="flex-1 p-6 lg:p-10 bg-background-light dark:bg-background-dark">
+<div class="mx-auto max-w-4xl w-full">
+<div class="flex flex-col gap-8">
+<header class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div>
+<h1 class="text-text-light-primary dark:text-text-dark-primary text-3xl font-bold tracking-tight">Community Feed</h1>
+<p class="text-text-light-secondary dark:text-text-dark-secondary mt-1">Discover questions and answers from your fellow students.</p>
+</div>
+<button class="flex items-center justify-center rounded-lg h-11 px-5 bg-primary text-white text-sm font-semibold leading-normal shadow-sm hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50 disabled:bg-gray-300 disabled:cursor-not-allowed w-full md:w-auto">
+<span class="material-symbols-outlined mr-2 !text-xl">add_circle</span>
+<span>Ask a Question</span>
+</button>
+</header>
+<div class="flex flex-col md:flex-row gap-4">
+<div class="relative flex-grow">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-text-light-secondary dark:text-text-dark-secondary">search</span>
+<input class="form-input w-full rounded-lg border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark py-3 pl-12 pr-4 text-text-light-primary dark:text-text-dark-primary placeholder:text-text-light-secondary focus:outline-none focus:ring-2 focus:ring-primary/50" placeholder="Search questions, topics, or subjects..." type="text"/>
+</div>
+<div class="flex items-center gap-4">
+<select class="form-select w-full md:w-44 rounded-lg border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark py-3 pl-4 pr-10 text-text-light-primary dark:text-text-dark-primary focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none">
+<option selected="">All Subjects</option>
+<option>Biology</option>
+<option>Physics</option>
+<option>Chemistry</option>
+<option>Mathematics</option>
+</select>
+<button class="flex-shrink-0 flex items-center justify-center rounded-lg h-[46px] w-[46px] border border-border-light dark:border-border-dark bg-card-light dark:bg-card-dark text-text-light-secondary hover:text-primary dark:hover:text-white">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-6">
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-subtle border border-border-light dark:border-border-dark">
+<div class="flex items-start gap-4">
+<img alt="User Avatar" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9q-7KVsdwlN3iKSogqEJsdzXM4kyzbsg7KhckxepxBBBo1M8bus3lR-6S3-DfHVLivn7z7RH285FHUg38HTJlCafofCTX4pySdzahdSIiLJXsyS5VjTPjXc88jJUAPl0T72J5LM-pTl3RF47RoeawnmDLFAENXoyIvo554bHBegUA22xcb6uZsitreMAf-02Xnyg0U1U1ML9d7EXHgQErMWl42WOCAT192xkn66f9XLyR63RHDYVhL0kxxibos31CGofS224e84I"/>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<p class="font-semibold text-text-light-primary dark:text-text-dark-primary">Grace Nakato</p>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">· 2 hours ago</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-800 dark:text-blue-300">Physics</span>
+<span class="text-xs font-medium px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-300">A'Level</span>
+</div>
+</div>
+<h3 class="text-lg font-semibold mt-2 text-text-light-primary dark:text-text-dark-primary leading-snug">Help with calculating projectile motion</h3>
+<p class="mt-2 text-text-light-secondary dark:text-text-dark-secondary text-sm leading-relaxed">I'm struggling to understand the formula for calculating the maximum height of a projectile. Can someone explain the derivation and provide a worked example? The specific problem involves a cannonball fired at an angle of 45 degrees with an initial velocity of 100 m/s.</p>
+<div class="mt-5 flex items-center justify-between text-text-light-secondary dark:text-text-dark-secondary">
+<div class="flex items-center gap-5">
+<button class="flex items-center gap-1.5 hover:text-primary dark:hover:text-primary-light"><span class="material-symbols-outlined text-xl">thumb_up</span><span class="text-sm font-medium">12</span></button>
+<button class="flex items-center gap-1.5 hover:text-primary dark:hover:text-primary-light"><span class="material-symbols-outlined text-xl">chat_bubble_outline</span><span class="text-sm font-medium">5 Answers</span></button>
+</div>
+<button class="flex items-center gap-1.5 hover:text-primary dark:hover:text-primary-light"><span class="material-symbols-outlined text-xl">bookmark_border</span></button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-subtle border border-border-light dark:border-border-dark">
+<div class="flex items-start gap-4">
+<img alt="User Avatar" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCi-NeB-ZxmQaEWWauPgew3CbgViTjS2ji87aAcPPSgveaDTLA1UKc42Jm0s5q0A5gpBug-4E9lHJgcmTazX3tq0UTTybg7AGcJys5JL9se_AGT-_DkoV8K7Wc5BwHdpBBb5wO1Ab2XGc-S3FrIQ8y6Np3msSGzwRjHJmM2v9OSjiFsbOyZbjMSrYsT1q10rpXNnxK8gKJvHbjntHEpPxQHvq5ed9OoKkwBY-VZrrJGlqpxrwTGtArTUQHxHJl6qzPaueV5Ps8NJw"/>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<p class="font-semibold text-text-light-primary dark:text-text-dark-primary">David Okello</p>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">· Yesterday</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium px-2.5 py-1 rounded-full bg-purple-100 dark:bg-purple-500/20 text-purple-800 dark:text-purple-300">Chemistry</span>
+<span class="text-xs font-medium px-2.5 py-1 rounded-full bg-yellow-100 dark:bg-yellow-500/20 text-yellow-800 dark:text-yellow-300">O'Level</span>
+</div>
+</div>
+<h3 class="text-lg font-semibold mt-2 text-text-light-primary dark:text-text-dark-primary leading-snug">What is the difference between an ionic and a covalent bond?</h3>
+<p class="mt-2 text-text-light-secondary dark:text-text-dark-secondary text-sm leading-relaxed">I have an exam coming up and I keep getting confused between these two types of chemical bonds. Can someone help clarify?</p>
+<img alt="Chemical bond diagram" class="mt-4 rounded-lg w-full h-auto max-h-80 object-cover border border-border-light dark:border-border-dark" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5k5tx2E7s0yOqNsu3xehpcLQgWu5WmNLD6zNL5cvFskoMI4u9i9-zORd4tI6t2SCoM4eLPM-JHGomI72WcAsGyQUy54u_X9f_kZ5oUwg2hoGBt85YfDTtvjlfeGA4oNNLi__izl_03xYBDsHCiVLGTviBLxgP5np1QCNE2FTuk_OMCu1C_eC22SNPLA4vE5sN_G_qgjbTGIRO68Vz6AdcYJqMml2Q7Lfj_oKvw55BZqA4Fmtg_LacajkAF3C_JsdNRf9ZOymUETs"/>
+<div class="mt-5 flex items-center justify-between text-text-light-secondary dark:text-text-dark-secondary">
+<div class="flex items-center gap-5">
+<button class="flex items-center gap-1.5 hover:text-primary dark:hover:text-primary-light"><span class="material-symbols-outlined text-xl">thumb_up</span><span class="text-sm font-medium">28</span></button>
+<button class="flex items-center gap-1.5 hover:text-primary dark:hover:text-primary-light"><span class="material-symbols-outlined text-xl">chat_bubble_outline</span><span class="text-sm font-medium">9 Answers</span></button>
+</div>
+<button class="flex items-center gap-1.5 text-primary dark:text-primary-light"><span class="material-symbols-outlined text-xl filled">bookmark</span></button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-subtle border border-border-light dark:border-border-dark">
+<div class="flex items-start gap-4">
+<img alt="User Avatar" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnD90rBqnGn9vvTZsanI2s4W1jQGZX5Ag1NH2QuHsh-kLJDi_QGyohPHhCwRi0-EU__JbLHsWmK0u1JjKdqSeHLtnZfBdGUVRqJilyR5Hwzz0N_keQhEa0hm3dSFy7DlOW_VqRXl6s3YPgqtaoAceMXQOPz0f3ZJPCQwelbBMdAS4lVahrfoOeT50mI0yv2hKkxJDzWW4osg1HoCT4VLtJyhG9B-3C94k7u7WrvMiSFlnAwiBKqbb-cZf0yb0EsYjcBQSyhBtBCzk"/>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<p class="font-semibold text-text-light-primary dark:text-text-dark-primary">Aisha Nanteza</p>
+<p class="text-sm text-text-light-secondary dark:text-text-dark-secondary">· 3 days ago</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium px-2.5 py-1 rounded-full bg-red-100 dark:bg-red-500/20 text-red-800 dark:text-red-300">Biology</span>
+<span class="text-xs font-medium px-2.5 py-1 rounded-full bg-yellow-100 dark:bg-yellow-500/20 text-yellow-800 dark:text-yellow-300">O'Level</span>
+</div>
+</div>
+<h3 class="text-lg font-semibold mt-2 text-text-light-primary dark:text-text-dark-primary leading-snug">Can someone explain the process of mitosis?</h3>
+<p class="mt-2 text-text-light-secondary dark:text-text-dark-secondary text-sm leading-relaxed">I'm finding it hard to remember all the stages (Prophase, Metaphase, Anaphase, Telophase). A simple diagram or a mnemonic would be really helpful!</p>
+<div class="mt-5 flex items-center justify-between text-text-light-secondary dark:text-text-dark-secondary">
+<div class="flex items-center gap-5">
+<button class="flex items-center gap-1.5 hover:text-primary dark:hover:text-primary-light"><span class="material-symbols-outlined text-xl">thumb_up</span><span class="text-sm font-medium">8</span></button>
+<button class="flex items-center gap-1.5 hover:text-primary dark:hover:text-primary-light"><span class="material-symbols-outlined text-xl">chat_bubble_outline</span><span class="text-sm font-medium">3 Answers</span></button>
+</div>
+<button class="flex items-center gap-1.5 hover:text-primary dark:hover:text-primary-light"><span class="material-symbols-outlined text-xl">bookmark_border</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<button class="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-background-light dark:focus:ring-offset-background-dark">
+<span class="material-symbols-outlined text-3xl">smart_toy</span>
+</button>
+</div>
+
+</body></html>
