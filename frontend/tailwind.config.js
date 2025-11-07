@@ -29,5 +29,17 @@ export default {
       },
     },
   },
+  safelist: [
+    "bg-verified/10",
+    "text-verified",
+    "bg-success/10",
+    "text-success",
+    "bg-info/10",
+    "text-info",
+    "bg-warning/10",
+    "text-warning",
+    "bg-danger/10",
+    "text-danger",
+  ],
   plugins: [],
 };
