@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import apiExports from "../api";
 
 const MyQuestions = () => {
   const navigate = useNavigate();
@@ -13,62 +14,114 @@ const MyQuestions = () => {
     status: "All Statuses",
   });
 
-  // Mock questions data - replace with actual API call
-  const [questions] = useState([
-    {
-      id: 1,
-      title:
-        "What is the escape velocity of an object from Earth's gravitational pull?",
-      description:
-        "I'm struggling to understand the derivation of the escape velocity formula. Could someone explain the key steps involved and how it relates to potential and kinetic energy? I've seen the formula v = sqrt(2GM/R) but I'm not sure where it comes from...",
-      subject: "Physics",
-      status: "Verified",
-      statusBgClass: "bg-verified/10",
-      statusTextClass: "text-verified",
-      statusIcon: "verified",
-      timeAgo: "2 days ago",
-      askedBy: "You",
-    },
-    {
-      id: 2,
-      title: "How do you solve a system of linear equations using matrices?",
-      description:
-        "I understand how to set up the augmented matrix, but I get confused with the row reduction steps. Is there a systematic way to approach it to avoid errors? Specifically, when should I swap rows versus multiplying a row by a constant?",
-      subject: "Mathematics",
-      status: "Answered",
-      statusBgClass: "bg-success/10",
-      statusTextClass: "text-success",
-      statusIcon: "check_circle",
-      timeAgo: "1 week ago",
-      askedBy: "You",
-    },
-    {
-      id: 3,
-      title: "What is the difference between an ionic and a covalent bond?",
-      description:
-        "I know one involves sharing electrons and the other involves transferring them, but I'm looking for a deeper explanation. How does electronegativity play a role in determining the type of bond that forms between two atoms?",
-      subject: "Chemistry",
-      status: "In Discussion",
-      statusBgClass: "bg-info/10",
-      statusTextClass: "text-info",
-      statusIcon: "forum",
-      timeAgo: "2 weeks ago",
-      askedBy: "You",
-    },
-    {
-      id: 4,
-      title: "Can someone explain the process of mitosis in simple terms?",
-      description:
-        "I need to remember the different phases (Prophase, Metaphase, Anaphase, Telophase) and what happens in each. A simple analogy or a diagram would be very helpful. I am preparing for my final exams and this topic is crucial.",
-      subject: "Biology",
-      status: "Pending",
-      statusBgClass: "bg-warning/10",
-      statusTextClass: "text-warning",
-      statusIcon: "pending",
-      timeAgo: "1 month ago",
-      askedBy: "You",
-    },
-  ]);
+  // API integration states
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const { questions: questionsAPI } = apiExports;
+
+  // Helper: map backend question to UI format
+  const mapQuestion = (q) => {
+    // Status mapping
+    let statusBgClass = "bg-info/10";
+    let statusTextClass = "text-info";
+    let statusIcon = "forum";
+    if (q.status === "Verified") {
+      statusBgClass = "bg-verified/10";
+      statusTextClass = "text-verified";
+      statusIcon = "verified";
+    } else if (q.status === "Answered") {
+      statusBgClass = "bg-success/10";
+      statusTextClass = "text-success";
+      statusIcon = "check_circle";
+    } else if (q.status === "Pending") {
+      statusBgClass = "bg-warning/10";
+      statusTextClass = "text-warning";
+      statusIcon = "pending";
+    }
+    // Time ago
+    const timeAgo = q.createdAt ? timeAgoFormat(q.createdAt) : "";
+    return {
+      id: q._id,
+      title: q.title,
+      description: q.description,
+      subject: q.subject,
+      status: q.status,
+      statusBgClass,
+      statusTextClass,
+      statusIcon,
+      timeAgo,
+      askedBy: q.askedBy?.name || "You",
+    };
+  };
+
+  // Helper: time ago formatting
+  function timeAgoFormat(dateStr) {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    if (diffDays < 1) {
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      if (diffHours < 1) {
+        const diffMins = Math.floor(diffMs / (1000 * 60));
+        return `${diffMins} min ago`;
+      }
+      return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+    }
+    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+    if (diffDays < 30)
+      return `${Math.floor(diffDays / 7)} week${
+        Math.floor(diffDays / 7) > 1 ? "s" : ""
+      } ago`;
+    if (diffDays < 90)
+      return `${Math.floor(diffDays / 30)} month${
+        Math.floor(diffDays / 30) > 1 ? "s" : ""
+      } ago`;
+    return date.toLocaleDateString();
+  }
+
+  // Fetch questions from API
+  const fetchQuestions = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      // Map filters to query params
+      const params = {};
+      if (filters.subject && filters.subject !== "All Subjects")
+        params.subject = filters.subject;
+      if (filters.status && filters.status !== "All Statuses")
+        params.status = filters.status;
+      // Time filter mapping
+      if (filters.timeAsked && filters.timeAsked !== "Any Time") {
+        const now = new Date();
+        let fromDate;
+        if (filters.timeAsked === "Last 7 days") {
+          fromDate = new Date(now - 7 * 24 * 60 * 60 * 1000);
+        } else if (filters.timeAsked === "Last 30 days") {
+          fromDate = new Date(now - 30 * 24 * 60 * 60 * 1000);
+        } else if (filters.timeAsked === "Last 3 months") {
+          fromDate = new Date(now - 90 * 24 * 60 * 60 * 1000);
+        }
+        if (fromDate) params.fromDate = fromDate.toISOString();
+      }
+      // Only fetch user's questions
+      params.askedBy = user?._id;
+      const res = await questionsAPI.getAll(params);
+      setQuestions(res.data.data.map(mapQuestion));
+    } catch (err) {
+      setError(err.message || "Failed to fetch questions");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch on mount and when filters change
+  useEffect(() => {
+    if (user) fetchQuestions();
+    // eslint-disable-next-line
+  }, [user, filters]);
 
   const handleFilterChange = (filterType, value) => {
     setFilters((prev) => ({
@@ -78,8 +131,8 @@ const MyQuestions = () => {
   };
 
   const applyFilters = () => {
-    // Implement filter logic here
-    console.log("Applying filters:", filters);
+    // Triggers useEffect to refetch
+    setFilters({ ...filters });
   };
 
   const handleQuestionClick = (questionId) => {
@@ -218,49 +271,66 @@ const MyQuestions = () => {
 
               {/* Questions List */}
               <div className="space-y-4">
-                {questions.map((question) => (
-                  <div
-                    key={question.id}
-                    onClick={() => handleQuestionClick(question.id)}
-                    className="bg-card-light dark:bg-card-dark rounded-xl border border-border-light dark:border-border-dark p-4 transition-shadow hover:shadow-md cursor-pointer"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          {/* Status Badge */}
-                          <span
-                            className={`inline-flex items-center gap-1.5 rounded-full ${question.statusBgClass} px-2 py-0.5 text-xs font-medium ${question.statusTextClass}`}
-                          >
-                            <span className="material-symbols-outlined text-sm filled">
-                              {question.statusIcon}
+                {loading && (
+                  <div className="text-center py-8 text-lg text-text-light-secondary dark:text-text-dark-secondary">
+                    Loading questions...
+                  </div>
+                )}
+                {error && (
+                  <div className="text-center py-8 text-lg text-red-500">
+                    {error}
+                  </div>
+                )}
+                {!loading && !error && questions.length === 0 && (
+                  <div className="text-center py-8 text-lg text-text-light-secondary dark:text-text-dark-secondary">
+                    No questions found.
+                  </div>
+                )}
+                {!loading &&
+                  !error &&
+                  questions.map((question) => (
+                    <div
+                      key={question.id}
+                      onClick={() => handleQuestionClick(question.id)}
+                      className="bg-card-light dark:bg-card-dark rounded-xl border border-border-light dark:border-border-dark p-4 transition-shadow hover:shadow-md cursor-pointer"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            {/* Status Badge */}
+                            <span
+                              className={`inline-flex items-center gap-1.5 rounded-full ${question.statusBgClass} px-2 py-0.5 text-xs font-medium ${question.statusTextClass}`}
+                            >
+                              <span className="material-symbols-outlined text-sm filled">
+                                {question.statusIcon}
+                              </span>
+                              {question.status}
                             </span>
-                            {question.status}
-                          </span>
-                          <span className="text-sm text-text-light-secondary dark:text-text-dark-secondary">
-                            •
-                          </span>
-                          <span className="text-sm font-medium text-text-light-secondary dark:text-text-dark-secondary">
-                            {question.subject}
-                          </span>
+                            <span className="text-sm text-text-light-secondary dark:text-text-dark-secondary">
+                              •
+                            </span>
+                            <span className="text-sm font-medium text-text-light-secondary dark:text-text-dark-secondary">
+                              {question.subject}
+                            </span>
+                          </div>
+                          <p className="font-semibold text-text-light-primary dark:text-text-dark-primary mb-1">
+                            {question.title}
+                          </p>
+                          <p className="text-sm text-text-light-secondary dark:text-text-dark-secondary">
+                            {question.description}
+                          </p>
                         </div>
-                        <p className="font-semibold text-text-light-primary dark:text-text-dark-primary mb-1">
-                          {question.title}
-                        </p>
-                        <p className="text-sm text-text-light-secondary dark:text-text-dark-secondary">
-                          {question.description}
-                        </p>
-                      </div>
-                      <div className="flex-shrink-0 text-left sm:text-right">
-                        <p className="text-sm font-medium">
-                          Asked {question.timeAgo}
-                        </p>
-                        <p className="text-xs text-text-light-secondary dark:text-text-dark-secondary">
-                          by {question.askedBy}
-                        </p>
+                        <div className="flex-shrink-0 text-left sm:text-right">
+                          <p className="text-sm font-medium">
+                            Asked {question.timeAgo}
+                          </p>
+                          <p className="text-xs text-text-light-secondary dark:text-text-dark-secondary">
+                            by {question.askedBy}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
 
               {/* Footer */}
