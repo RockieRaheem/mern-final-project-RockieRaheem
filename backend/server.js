@@ -90,13 +90,23 @@ if (process.env.NODE_ENV === "development") {
 // Rate limiting
 const limiter = rateLimit({
   windowMs:
-    parseInt(process.env.RATE_LIMIT_WINDOW) * 60 * 1000 || 15 * 60 * 1000, // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100,
+    parseInt(process.env.RATE_LIMIT_WINDOW) * 60 * 1000 || 15 * 60 * 1000, // 1 minute
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 1000,
   message: "Too many requests from this IP, please try again later.",
   standardHeaders: true,
   legacyHeaders: false,
 });
 
+// Less strict limiter for auth routes
+const authLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 1000,
+  message: "Too many login/register attempts. Please wait a moment.",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use("/api/auth", authLimiter);
 app.use("/api/", limiter);
 
 // Serve static files (uploads)

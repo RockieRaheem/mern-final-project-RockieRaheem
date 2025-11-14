@@ -37,7 +37,11 @@ const AuthPage = () => {
       }
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "An error occurred");
+      if (err.response?.status === 429) {
+        setError("Too many requests. Please wait a moment and try again.");
+      } else {
+        setError(err.response?.data?.message || "An error occurred");
+      }
     } finally {
       setLoading(false);
     }

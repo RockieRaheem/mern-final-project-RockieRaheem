@@ -1,7 +1,6 @@
-import { createContext, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { authAPI } from "../api";
-
-export const AuthContext = createContext(null);
+import AuthContext from "./AuthContext";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -13,9 +12,14 @@ export const AuthProvider = ({ children }) => {
       authAPI
         .getMe()
         .then((res) => setUser(res.data.data))
-        .catch(() => {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
+        .catch((err) => {
+          if (err.response?.status === 429) {
+            // Optionally, set a global error state or show a toast
+            alert("Too many requests. Please wait a moment and try again.");
+          } else {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+          }
         })
         .finally(() => setLoading(false));
     } else {
