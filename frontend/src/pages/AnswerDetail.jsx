@@ -93,7 +93,12 @@ export default function AnswerDetail() {
                 <div className="mt-4 space-y-2">
                   {answer.attachments.map((file, idx) => (
                     <div key={idx}>
-                      <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                      <a
+                        href={file.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 underline"
+                      >
                         {file.filename || "Attachment"}
                       </a>
                     </div>
