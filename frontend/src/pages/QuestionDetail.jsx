@@ -7,6 +7,7 @@ export default function QuestionDetail() {
   const navigate = useNavigate();
   const [question, setQuestion] = useState(null);
   const [answers, setAnswers] = useState([]);
+  const [error, setError] = useState(null);
   const [answerContent, setAnswerContent] = useState("");
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -14,14 +15,30 @@ export default function QuestionDetail() {
   const fetchQuestionAndAnswers = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       const [questionRes, answersRes] = await Promise.all([
         api.questions.getById(id),
         api.answers.getByQuestion(id),
       ]);
-      setQuestion(questionRes.data);
-      setAnswers(answersRes.data);
+      // Defensive: handle backend response shape
+      const q = questionRes.data?.data || questionRes.data;
+      setQuestion({
+        ...q,
+        // fallback for body/content
+        content: q.body || q.content || "",
+        // fallback for educationLevel/level
+        level: q.educationLevel || q.level || "",
+        upvotes: Array.isArray(q.upvotes) ? q.upvotes.length : q.upvotes || 0,
+        isBookmarked: !!q.isBookmarked,
+      });
+      // Defensive: answers array
+      let ans = answersRes.data?.data || answersRes.data;
+      if (!Array.isArray(ans)) ans = [];
+      setAnswers(ans);
     } catch {
-      console.error("Failed to load question");
+      setError("Failed to load question");
+      setQuestion(null);
+      setAnswers([]);
     } finally {
       setLoading(false);
     }
@@ -64,11 +81,14 @@ export default function QuestionDetail() {
 
     try {
       setSubmitting(true);
+      // Backend expects 'question' and 'body'
       const response = await api.answers.create({
-        questionId: id,
-        content: answerContent,
+        question: id,
+        body: answerContent,
       });
-      setAnswers([response.data, ...answers]);
+      // Defensive: handle backend response shape
+      const newAnswer = response.data?.data || response.data;
+      setAnswers([newAnswer, ...answers]);
       setAnswerContent("");
     } catch {
       console.error("Failed to submit answer");
@@ -101,7 +121,13 @@ export default function QuestionDetail() {
       </div>
     );
   }
-
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center">
+        <div className="text-red-500">{error}</div>
+      </div>
+    );
+  }
   if (!question) {
     return (
       <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center">

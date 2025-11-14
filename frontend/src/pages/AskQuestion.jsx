@@ -8,7 +8,7 @@ export default function AskQuestion() {
     title: "",
     content: "",
     subject: "",
-    level: "A-Level",
+    educationLevel: "A-Level",
     image: null,
   });
   const [preview, setPreview] = useState(null);
@@ -63,18 +63,22 @@ export default function AskQuestion() {
 
       const submitData = new FormData();
       submitData.append("title", formData.title);
-      submitData.append("content", formData.content);
+      submitData.append("body", formData.content); // backend expects 'body'
       submitData.append("subject", formData.subject);
-      submitData.append("level", formData.level);
+      submitData.append("educationLevel", formData.educationLevel); // backend expects 'educationLevel'
 
       if (formData.image) {
         submitData.append("image", formData.image);
       }
 
       const response = await api.questions.create(submitData);
-
-      // Navigate to the newly created question
-      navigate(`/questions/${response.data._id}`);
+      // Use correct property for new question ID
+      const newId = response.data.data?._id || response.data._id;
+      if (newId) {
+        navigate(`/questions/${newId}`);
+      } else {
+        setError("Question created but could not get ID.");
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Failed to post question");
     } finally {
@@ -234,10 +238,13 @@ export default function AskQuestion() {
                   <button
                     type="button"
                     onClick={() =>
-                      setFormData((prev) => ({ ...prev, level: "O-Level" }))
+                      setFormData((prev) => ({
+                        ...prev,
+                        educationLevel: "O-Level",
+                      }))
                     }
                     className={`flex items-center justify-center rounded-lg h-11 px-4 text-sm font-semibold border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-card-light dark:focus:ring-offset-card-dark focus:ring-primary/50 ${
-                      formData.level === "O-Level"
+                      formData.educationLevel === "O-Level"
                         ? "border-primary bg-primary/10 text-primary"
                         : "border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-light-secondary dark:text-text-dark-secondary hover:bg-primary/10 hover:text-primary"
                     }`}
@@ -247,10 +254,13 @@ export default function AskQuestion() {
                   <button
                     type="button"
                     onClick={() =>
-                      setFormData((prev) => ({ ...prev, level: "A-Level" }))
+                      setFormData((prev) => ({
+                        ...prev,
+                        educationLevel: "A-Level",
+                      }))
                     }
                     className={`flex items-center justify-center rounded-lg h-11 px-4 text-sm font-semibold border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-card-light dark:focus:ring-offset-card-dark focus:ring-primary/50 ${
-                      formData.level === "A-Level"
+                      formData.educationLevel === "A-Level"
                         ? "border-primary bg-primary/10 text-primary"
                         : "border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-light-secondary dark:text-text-dark-secondary hover:bg-primary/10 hover:text-primary"
                     }`}
