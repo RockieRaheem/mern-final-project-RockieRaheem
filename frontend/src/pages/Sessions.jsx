@@ -108,19 +108,17 @@ export default function Sessions() {
           maxParticipants: 20,
           tags: "",
         });
-        fetchSessions();
+        await fetchSessions();
       }
     } catch (err) {
+      console.error("Session creation error:", err);
       if (err?.response?.data?.message) {
         setCreateError(err.response.data.message);
       } else if (err?.response?.data?.error) {
         setCreateError(err.response.data.error);
-      } else {
-        setCreateError("Failed to create session. Please try again.");
       }
-    } finally {
-      setCreating(false);
     }
+    await fetchSessions();
   };
 
   return (
@@ -293,24 +291,34 @@ export default function Sessions() {
                 required
                 className="border rounded-lg px-4 py-2"
               />
-              <input
-                type="text"
+              <select
                 name="subject"
                 value={createForm.subject}
                 onChange={handleCreateChange}
-                placeholder="Subject (e.g. Physics)"
                 required
                 className="border rounded-lg px-4 py-2"
-              />
-              <input
-                type="text"
+              >
+                <option value="">Select Subject</option>
+                <option value="Biology">Biology</option>
+                <option value="Chemistry">Chemistry</option>
+                <option value="Physics">Physics</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="English">English</option>
+                <option value="History">History</option>
+                <option value="Geography">Geography</option>
+                <option value="Economics">Economics</option>
+              </select>
+              <select
                 name="educationLevel"
                 value={createForm.educationLevel}
                 onChange={handleCreateChange}
-                placeholder="Education Level (e.g. A-Level)"
                 required
                 className="border rounded-lg px-4 py-2"
-              />
+              >
+                <option value="">Select Education Level</option>
+                <option value="O-Level">O-Level</option>
+                <option value="A-Level">A-Level</option>
+              </select>
               <select
                 name="type"
                 value={createForm.type}
@@ -319,6 +327,7 @@ export default function Sessions() {
               >
                 <option value="teacher-led">Teacher Led</option>
                 <option value="student-led">Student Led</option>
+                <option value="group-study">Group Study</option>
               </select>
               <input
                 type="datetime-local"
