@@ -456,10 +456,11 @@ export default function QuestionDetail() {
           {answers.map((answer) => (
             <div
               key={answer._id}
-              className="bg-card-light dark:bg-card-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark overflow-hidden"
+              onClick={() => navigate(`/answers/${answer._id}`)}
+              className="bg-card-light dark:bg-card-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark overflow-hidden cursor-pointer hover:shadow-lg hover:border-primary/50 transition-all"
             >
-              {/* Answer Header */}
-              <div className="p-6 border-b border-border-light dark:border-border-dark bg-gray-50 dark:bg-gray-900/30">
+              {/* Answer Preview - Author Info Only */}
+              <div className="p-6">
                 <div className="flex items-start gap-4">
                   <img
                     src={
@@ -473,7 +474,7 @@ export default function QuestionDetail() {
                   />
                   <div className="flex-1">
                     <div className="flex items-start justify-between gap-4 flex-wrap">
-                      <div>
+                      <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <h4 className="font-bold text-text-light-primary dark:text-text-dark-primary">
                             {answer.author?.name || "Anonymous"}
@@ -534,60 +535,58 @@ export default function QuestionDetail() {
                             }
                           )}
                         </div>
+
+                        {/* Answer Preview Text */}
+                        <p className="mt-3 text-text-light-secondary dark:text-text-dark-secondary leading-relaxed line-clamp-2">
+                          {answer.body || answer.content}
+                        </p>
+
+                        {/* Attachment Indicator */}
+                        {answer.attachments &&
+                          answer.attachments.length > 0 && (
+                            <div className="flex items-center gap-2 mt-3 text-sm text-primary">
+                              <span className="material-symbols-outlined text-base">
+                                attach_file
+                              </span>
+                              <span>
+                                {answer.attachments.length}{" "}
+                                {answer.attachments.length === 1
+                                  ? "attachment"
+                                  : "attachments"}
+                              </span>
+                            </div>
+                          )}
+
+                        {/* View Full Answer Link */}
+                        <div className="flex items-center gap-1 mt-3 text-sm text-primary hover:text-primary/80 font-semibold">
+                          <span>View full answer</span>
+                          <span className="material-symbols-outlined text-base">
+                            arrow_forward
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Likes on the side */}
+                      <div className="flex flex-col items-center gap-1 px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUpvoteAnswer(answer._id);
+                          }}
+                          className="flex items-center gap-1 text-text-light-secondary dark:text-text-dark-secondary hover:text-green-600 dark:hover:text-green-400 transition-colors"
+                        >
+                          <span className="material-symbols-outlined text-xl">
+                            thumb_up
+                          </span>
+                        </button>
+                        <span className="text-sm font-bold text-text-light-primary dark:text-text-dark-primary">
+                          {Array.isArray(answer.upvotes)
+                            ? answer.upvotes.length
+                            : answer.upvotes || 0}
+                        </span>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Answer Content */}
-              <div className="p-6">
-                <div className="prose dark:prose-invert max-w-none">
-                  <p className="text-text-light-secondary dark:text-text-dark-secondary leading-relaxed whitespace-pre-wrap">
-                    {answer.body || answer.content}
-                  </p>
-                </div>
-
-                {/* Answer Attachments */}
-                {answer.attachments && answer.attachments.length > 0 && (
-                  <div className="space-y-4 mt-6">
-                    {answer.attachments.map((attachment, index) =>
-                      renderAttachment(attachment, index)
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {/* Answer Actions */}
-              <div className="px-6 py-4 border-t border-border-light dark:border-border-dark bg-gray-50 dark:bg-gray-900/30">
-                <div className="flex items-center gap-6">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleUpvoteAnswer(answer._id);
-                    }}
-                    className="flex items-center gap-2 text-text-light-secondary dark:text-text-dark-secondary hover:text-green-600 dark:hover:text-green-400 transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-xl">
-                      thumb_up
-                    </span>
-                    <span className="text-sm font-semibold">
-                      {Array.isArray(answer.upvotes)
-                        ? answer.upvotes.length
-                        : answer.upvotes || 0}
-                    </span>
-                  </button>
-                  {answer.verifiedBy && (
-                    <div className="flex items-center gap-1 text-sm text-green-600 dark:text-green-400">
-                      <span
-                        className="material-symbols-outlined text-base"
-                        style={{ fontVariationSettings: "'FILL' 1" }}
-                      >
-                        verified
-                      </span>
-                      <span>Verified by {answer.verifiedBy.name}</span>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
