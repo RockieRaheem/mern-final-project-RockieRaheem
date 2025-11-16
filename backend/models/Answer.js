@@ -20,7 +20,14 @@ const answerSchema = new mongoose.Schema(
     attachments: [
       {
         filename: String,
+        originalName: String,
         url: String,
+        fileType: {
+          type: String,
+          enum: ["image", "video", "document", "pdf", "other"],
+        },
+        mimeType: String,
+        size: Number,
         uploadedAt: {
           type: Date,
           default: Date.now,

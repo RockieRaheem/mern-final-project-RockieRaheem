@@ -63,11 +63,17 @@ export const getQuestions = async (req, res, next) => {
 export const getQuestion = async (req, res, next) => {
   try {
     const question = await Question.findById(req.params.id)
-      .populate("author", "name avatar school educationLevel role verified")
+      .populate(
+        "author",
+        "name avatar school educationLevel role verified email"
+      )
       .populate({
         path: "answers",
         populate: [
-          { path: "author", select: "name avatar role verified" },
+          {
+            path: "author",
+            select: "name avatar role verified email school educationLevel",
+          },
           { path: "verifiedBy", select: "name role" },
         ],
       });
@@ -101,10 +107,32 @@ export const createQuestion = async (req, res, next) => {
 
     // Handle file uploads if any
     if (req.files && req.files.length > 0) {
-      req.body.attachments = req.files.map((file) => ({
-        filename: file.filename,
-        url: `/uploads/${file.filename}`,
-      }));
+      req.body.attachments = req.files.map((file) => {
+        // Determine file type based on mimetype
+        let fileType = "other";
+        if (file.mimetype.startsWith("image/")) {
+          fileType = "image";
+        } else if (file.mimetype.startsWith("video/")) {
+          fileType = "video";
+        } else if (file.mimetype === "application/pdf") {
+          fileType = "pdf";
+        } else if (
+          file.mimetype.includes("word") ||
+          file.mimetype.includes("document") ||
+          file.mimetype.includes("text")
+        ) {
+          fileType = "document";
+        }
+
+        return {
+          filename: file.filename,
+          originalName: file.originalname,
+          url: `/uploads/${file.filename}`,
+          fileType,
+          mimeType: file.mimetype,
+          size: file.size,
+        };
+      });
     }
 
     // Check if flagged by moderation middleware
@@ -116,7 +144,7 @@ export const createQuestion = async (req, res, next) => {
     const question = await Question.create(req.body);
 
     // Populate author before sending
-    await question.populate("author", "name avatar school");
+    await question.populate("author", "name avatar school role verified");
 
     res.status(201).json({
       success: true,

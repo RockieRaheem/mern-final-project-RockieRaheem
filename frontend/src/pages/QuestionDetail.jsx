@@ -108,17 +108,138 @@ export default function QuestionDetail() {
 
   const handleUpvoteAnswer = async (answerId) => {
     try {
-      await api.answers.upvote(answerId);
-      setAnswers((prev) =>
-        prev.map((answer) =>
-          answer._id === answerId
-            ? { ...answer, upvotes: answer.upvotes + 1 }
-            : answer
-        )
-      );
+      await api.answers.vote(answerId, { voteType: "upvote" });
+      await fetchQuestionAndAnswers();
     } catch {
       console.error("Failed to upvote answer");
     }
+  };
+
+  const getFileIcon = (fileType) => {
+    switch (fileType) {
+      case "image":
+        return "image";
+      case "video":
+        return "videocam";
+      case "pdf":
+        return "picture_as_pdf";
+      case "document":
+        return "description";
+      default:
+        return "attachment";
+    }
+  };
+
+  const renderAttachment = (attachment, index) => {
+    const fileUrl = `${
+      import.meta.env.VITE_API_URL || "http://localhost:5000"
+    }${attachment.url}`;
+
+    return (
+      <div
+        key={index}
+        className="mt-4 border border-border-light dark:border-border-dark rounded-lg overflow-hidden"
+      >
+        {attachment.fileType === "image" && (
+          <div className="relative group">
+            <img
+              src={fileUrl}
+              alt={attachment.originalName || "Attachment"}
+              className="w-full max-h-96 object-contain bg-gray-50 dark:bg-gray-900"
+            />
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex items-center justify-between">
+                <span className="text-white text-sm">
+                  {attachment.originalName}
+                </span>
+                <a
+                  href={fileUrl}
+                  download={attachment.originalName}
+                  className="flex items-center gap-1 text-white hover:text-primary"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <span className="material-symbols-outlined text-xl">
+                    download
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {attachment.fileType === "video" && (
+          <div className="bg-black">
+            <video controls className="w-full max-h-96" preload="metadata">
+              <source src={fileUrl} type={attachment.mimeType} />
+              Your browser does not support the video tag.
+            </video>
+            <div className="bg-gray-800 p-3 flex items-center justify-between">
+              <span className="text-white text-sm">
+                {attachment.originalName}
+              </span>
+              <a
+                href={fileUrl}
+                download={attachment.originalName}
+                className="flex items-center gap-1 text-white hover:text-primary"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <span className="material-symbols-outlined text-xl">
+                  download
+                </span>
+              </a>
+            </div>
+          </div>
+        )}
+
+        {(attachment.fileType === "pdf" ||
+          attachment.fileType === "document") && (
+          <div className="bg-gray-50 dark:bg-gray-900 p-6">
+            <div className="flex items-start gap-4">
+              <div className="flex-shrink-0 w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                <span className="material-symbols-outlined text-3xl text-red-600 dark:text-red-400">
+                  {getFileIcon(attachment.fileType)}
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-semibold text-text-light-primary dark:text-text-dark-primary truncate">
+                  {attachment.originalName}
+                </h4>
+                <p className="text-sm text-text-light-secondary dark:text-text-dark-secondary mt-1">
+                  {attachment.size
+                    ? `${(attachment.size / 1024).toFixed(2)} KB`
+                    : "File"}
+                </p>
+                <div className="flex gap-3 mt-3">
+                  <a
+                    href={fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-sm text-primary hover:text-primary/80"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span className="material-symbols-outlined text-lg">
+                      visibility
+                    </span>
+                    View
+                  </a>
+                  <a
+                    href={fileUrl}
+                    download={attachment.originalName}
+                    className="flex items-center gap-1 text-sm text-primary hover:text-primary/80"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span className="material-symbols-outlined text-lg">
+                      download
+                    </span>
+                    Download
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
   };
 
   if (loading) {
@@ -199,12 +320,21 @@ export default function QuestionDetail() {
               </h1>
 
               {/* Question Content */}
-              <p className="mt-3 text-text-light-secondary dark:text-text-dark-secondary leading-relaxed">
-                {question.content}
+              <p className="mt-3 text-text-light-secondary dark:text-text-dark-secondary leading-relaxed whitespace-pre-wrap">
+                {question.content || question.body}
               </p>
 
-              {/* Image if exists */}
-              {question.image && (
+              {/* Question Attachments */}
+              {question.attachments && question.attachments.length > 0 && (
+                <div className="space-y-4 mt-4">
+                  {question.attachments.map((attachment, index) =>
+                    renderAttachment(attachment, index)
+                  )}
+                </div>
+              )}
+
+              {/* Legacy Image Support */}
+              {question.image && !question.attachments && (
                 <img
                   src={question.image}
                   alt="Question attachment"
@@ -266,17 +396,41 @@ export default function QuestionDetail() {
               onChange={(e) => setAnswerContent(e.target.value)}
             />
             <div className="mt-4">
-              <label className="block text-sm font-medium mb-2">
-                Upload attachments (PDF, DOCX, video):
+              <label className="block text-sm font-medium mb-2 text-text-light-primary dark:text-text-dark-primary">
+                Attach files (images, videos, PDFs, documents)
               </label>
               <input
                 type="file"
                 multiple
-                accept=".pdf,.doc,.docx,video/*"
+                accept="image/*,video/*,.pdf,.doc,.docx,.txt"
                 ref={fileInputRef}
                 onChange={(e) => setAttachments(Array.from(e.target.files))}
                 className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90"
               />
+              {attachments.length > 0 && (
+                <div className="mt-3 space-y-2">
+                  {attachments.map((file, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-2 text-sm text-text-light-secondary dark:text-text-dark-secondary bg-gray-50 dark:bg-gray-900 p-2 rounded"
+                    >
+                      <span className="material-symbols-outlined text-primary">
+                        {file.type.startsWith("image/")
+                          ? "image"
+                          : file.type.startsWith("video/")
+                          ? "videocam"
+                          : file.type === "application/pdf"
+                          ? "picture_as_pdf"
+                          : "description"}
+                      </span>
+                      <span className="flex-1 truncate">{file.name}</span>
+                      <span className="text-xs">
+                        {(file.size / 1024).toFixed(2)} KB
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="mt-4 flex justify-end">
               <button
@@ -302,50 +456,138 @@ export default function QuestionDetail() {
           {answers.map((answer) => (
             <div
               key={answer._id}
-              className="bg-card-light dark:bg-card-dark p-6 rounded-xl shadow-sm border border-border-light dark:border-border-dark cursor-pointer hover:bg-surface-light dark:hover:bg-surface-dark"
-              onClick={() => navigate(`/answers/${answer._id}`)}
+              className="bg-card-light dark:bg-card-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark overflow-hidden"
             >
-              <div className="flex items-start gap-4">
-                <img
-                  src={
-                    answer.author?.avatar ||
-                    `https://ui-avatars.com/api/?name=${
-                      answer.author?.name || "User"
-                    }`
-                  }
-                  alt={answer.author?.name}
-                  className="w-10 h-10 rounded-full"
-                />
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <p className="font-semibold text-text-light-primary dark:text-text-dark-primary">
-                      {answer.author?.name || "Anonymous"}
-                    </p>
-                    {answer.isVerified && (
-                      <span className="material-symbols-outlined text-green-500 filled text-sm">
+              {/* Answer Header */}
+              <div className="p-6 border-b border-border-light dark:border-border-dark bg-gray-50 dark:bg-gray-900/30">
+                <div className="flex items-start gap-4">
+                  <img
+                    src={
+                      answer.author?.avatar ||
+                      `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                        answer.author?.name || "User"
+                      )}&background=10b981&color=fff`
+                    }
+                    alt={answer.author?.name}
+                    className="w-12 h-12 rounded-full ring-2 ring-green-500/20"
+                  />
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between gap-4 flex-wrap">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h4 className="font-bold text-text-light-primary dark:text-text-dark-primary">
+                            {answer.author?.name || "Anonymous"}
+                          </h4>
+                          {answer.author?.verified && (
+                            <span
+                              className="material-symbols-outlined text-blue-500 text-base"
+                              style={{ fontVariationSettings: "'FILL' 1" }}
+                            >
+                              verified
+                            </span>
+                          )}
+                          {answer.author?.role === "teacher" && (
+                            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
+                              TEACHER
+                            </span>
+                          )}
+                          {answer.isAccepted && (
+                            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 flex items-center gap-1">
+                              <span
+                                className="material-symbols-outlined text-sm"
+                                style={{ fontVariationSettings: "'FILL' 1" }}
+                              >
+                                check_circle
+                              </span>
+                              ACCEPTED
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2 mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary">
+                          {answer.author?.school && (
+                            <span>{answer.author.school}</span>
+                          )}
+                          {answer.author?.educationLevel && (
+                            <>
+                              <span>•</span>
+                              <span>{answer.author.educationLevel}</span>
+                            </>
+                          )}
+                          {answer.author?.email && (
+                            <>
+                              <span>•</span>
+                              <span className="truncate max-w-xs">
+                                {answer.author.email}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                        <div className="text-xs text-text-light-secondary dark:text-text-dark-secondary mt-1">
+                          {new Date(answer.createdAt).toLocaleDateString(
+                            "en-US",
+                            {
+                              month: "long",
+                              day: "numeric",
+                              year: "numeric",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Answer Content */}
+              <div className="p-6">
+                <div className="prose dark:prose-invert max-w-none">
+                  <p className="text-text-light-secondary dark:text-text-dark-secondary leading-relaxed whitespace-pre-wrap">
+                    {answer.body || answer.content}
+                  </p>
+                </div>
+
+                {/* Answer Attachments */}
+                {answer.attachments && answer.attachments.length > 0 && (
+                  <div className="space-y-4 mt-6">
+                    {answer.attachments.map((attachment, index) =>
+                      renderAttachment(attachment, index)
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Answer Actions */}
+              <div className="px-6 py-4 border-t border-border-light dark:border-border-dark bg-gray-50 dark:bg-gray-900/30">
+                <div className="flex items-center gap-6">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleUpvoteAnswer(answer._id);
+                    }}
+                    className="flex items-center gap-2 text-text-light-secondary dark:text-text-dark-secondary hover:text-green-600 dark:hover:text-green-400 transition-colors"
+                  >
+                    <span className="material-symbols-outlined text-xl">
+                      thumb_up
+                    </span>
+                    <span className="text-sm font-semibold">
+                      {Array.isArray(answer.upvotes)
+                        ? answer.upvotes.length
+                        : answer.upvotes || 0}
+                    </span>
+                  </button>
+                  {answer.verifiedBy && (
+                    <div className="flex items-center gap-1 text-sm text-green-600 dark:text-green-400">
+                      <span
+                        className="material-symbols-outlined text-base"
+                        style={{ fontVariationSettings: "'FILL' 1" }}
+                      >
                         verified
                       </span>
-                    )}
-                    <p className="text-sm text-text-light-secondary dark:text-text-dark-secondary">
-                      · {new Date(answer.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <p className="text-text-light-secondary dark:text-text-dark-secondary leading-relaxed">
-                    {answer.content}
-                  </p>
-                  <div className="mt-4 flex items-center gap-4">
-                    <button
-                      onClick={() => handleUpvoteAnswer(answer._id)}
-                      className="flex items-center gap-1.5 text-text-light-secondary dark:text-text-dark-secondary hover:text-primary"
-                    >
-                      <span className="material-symbols-outlined text-base">
-                        thumb_up
-                      </span>
-                      <span className="text-sm font-medium">
-                        {answer.upvotes || 0}
-                      </span>
-                    </button>
-                  </div>
+                      <span>Verified by {answer.verifiedBy.name}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

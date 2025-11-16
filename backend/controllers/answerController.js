@@ -26,7 +26,10 @@ import User from "../models/User.js";
 export const getAnswersForQuestion = async (req, res, next) => {
   try {
     const answers = await Answer.find({ question: req.params.questionId })
-      .populate("author", "name avatar role verified")
+      .populate(
+        "author",
+        "name avatar role verified email school educationLevel"
+      )
       .populate("verifiedBy", "name role")
       .sort({ isAccepted: -1, createdAt: -1 });
 
@@ -62,10 +65,32 @@ export const createAnswer = async (req, res, next) => {
     // Debug: log file upload info
     console.log("req.files:", req.files);
     if (req.files && req.files.length > 0) {
-      req.body.attachments = req.files.map((file) => ({
-        filename: file.originalname || file.filename,
-        url: `/uploads/${file.filename}`,
-      }));
+      req.body.attachments = req.files.map((file) => {
+        // Determine file type based on mimetype
+        let fileType = "other";
+        if (file.mimetype.startsWith("image/")) {
+          fileType = "image";
+        } else if (file.mimetype.startsWith("video/")) {
+          fileType = "video";
+        } else if (file.mimetype === "application/pdf") {
+          fileType = "pdf";
+        } else if (
+          file.mimetype.includes("word") ||
+          file.mimetype.includes("document") ||
+          file.mimetype.includes("text")
+        ) {
+          fileType = "document";
+        }
+
+        return {
+          filename: file.filename,
+          originalName: file.originalname,
+          url: `/uploads/${file.filename}`,
+          fileType,
+          mimeType: file.mimetype,
+          size: file.size,
+        };
+      });
     }
 
     // Auto-approve for verified teachers
@@ -92,7 +117,10 @@ export const createAnswer = async (req, res, next) => {
     user.points += 5; // 5 points for answering
     await user.save();
 
-    await answer.populate("author", "name avatar role verified");
+    await answer.populate(
+      "author",
+      "name avatar role verified email school educationLevel"
+    );
 
     res.status(201).json({
       success: true,
