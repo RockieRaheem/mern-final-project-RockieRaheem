@@ -63,9 +63,38 @@ export default function Sessions() {
     e.preventDefault();
     setCreating(true);
     setCreateError("");
+    const allowedSubjects = [
+      "Biology",
+      "Chemistry",
+      "Physics",
+      "Mathematics",
+      "English",
+      "History",
+      "Geography",
+      "Economics",
+    ];
+    const allowedEducationLevels = ["O-Level", "A-Level"];
+    const allowedTypes = ["student-led", "teacher-led", "group-study"];
+    const payload = {
+      ...createForm,
+      subject: allowedSubjects.includes(createForm.subject)
+        ? createForm.subject
+        : allowedSubjects[0],
+      educationLevel: allowedEducationLevels.includes(createForm.educationLevel)
+        ? createForm.educationLevel
+        : allowedEducationLevels[0],
+      type: allowedTypes.includes(createForm.type)
+        ? createForm.type
+        : allowedTypes[1],
+      tags: createForm.tags
+        ? createForm.tags
+            .split(",")
+            .map((tag) => tag.trim())
+            .filter(Boolean)
+        : [],
+    };
     try {
-      // API call to create session
-      const response = await api.sessions.create(createForm);
+      const response = await api.sessions.create(payload);
       if (response.data) {
         setShowCreateModal(false);
         setCreateForm({
@@ -81,8 +110,14 @@ export default function Sessions() {
         });
         fetchSessions();
       }
-    } catch {
-      setCreateError("Failed to create session. Please try again.");
+    } catch (err) {
+      if (err?.response?.data?.message) {
+        setCreateError(err.response.data.message);
+      } else if (err?.response?.data?.error) {
+        setCreateError(err.response.data.error);
+      } else {
+        setCreateError("Failed to create session. Please try again.");
+      }
     } finally {
       setCreating(false);
     }
