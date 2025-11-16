@@ -26,6 +26,7 @@ import answerRoutes from "./routes/answers.js";
 import sessionRoutes from "./routes/sessions.js";
 import reportRoutes from "./routes/reports.js";
 import chatbotRoutes from "./routes/chatbot.js";
+import downloadRoutes from "./routes/downloads.js";
 
 // Get directory name (ES modules)
 const __filename = fileURLToPath(import.meta.url);
@@ -109,8 +110,46 @@ const authLimiter = rateLimit({
 app.use("/api/auth", authLimiter);
 app.use("/api/", limiter);
 
-// Serve static files (uploads)
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+// Serve static files (uploads) with proper headers
+app.use(
+  "/uploads",
+  (req, res, next) => {
+    // Set CORS headers for images
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+
+    // Get file extension
+    const ext = path.extname(req.path).toLowerCase();
+
+    // Set proper Content-Type headers
+    const contentTypes = {
+      ".pdf": "application/pdf",
+      ".doc": "application/msword",
+      ".docx":
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      ".jpg": "image/jpeg",
+      ".jpeg": "image/jpeg",
+      ".png": "image/png",
+      ".gif": "image/gif",
+      ".webp": "image/webp",
+      ".mp4": "video/mp4",
+      ".webm": "video/webm",
+      ".ogg": "video/ogg",
+    };
+
+    if (contentTypes[ext]) {
+      res.setHeader("Content-Type", contentTypes[ext]);
+    }
+
+    // Allow inline viewing by default (not forced download)
+    res.setHeader("Content-Disposition", "inline");
+
+    next();
+  },
+  express.static(path.join(__dirname, "uploads"))
+);
 
 // Mount routers
 app.use("/api/auth", authRoutes);
@@ -119,6 +158,7 @@ app.use("/api/answers", answerRoutes);
 app.use("/api/sessions", sessionRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/chatbot", chatbotRoutes);
+app.use("/api/downloads", downloadRoutes);
 
 // Health check route
 app.get("/api/health", (req, res) => {

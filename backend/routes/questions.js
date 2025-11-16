@@ -21,7 +21,7 @@ router
     protect,
     checkStrikes,
     moderateContent,
-    upload.array("attachments", 3),
+    upload.array("images", 3),
     createQuestion
   );
 

@@ -4,8 +4,12 @@
 export const getAnswerById = async (req, res, next) => {
   try {
     const answer = await Answer.findById(req.params.id)
-      .populate("author", "name avatar role verified")
-      .populate("verifiedBy", "name role");
+      .populate(
+        "author",
+        "name avatar role verified email school educationLevel"
+      )
+      .populate("verifiedBy", "name role")
+      .populate("question", "title body");
     if (!answer) {
       return res
         .status(404)
@@ -62,35 +66,25 @@ export const createAnswer = async (req, res, next) => {
     // Add author
     req.body.author = req.user.id;
 
-    // Debug: log file upload info
+    // DEBUG: log file upload info
+    console.log("========== CREATE ANSWER DEBUG ==========");
     console.log("req.files:", req.files);
+    console.log("req.body:", req.body);
+    console.log("========================================");
+
     if (req.files && req.files.length > 0) {
       req.body.attachments = req.files.map((file) => {
-        // Determine file type based on mimetype
-        let fileType = "other";
-        if (file.mimetype.startsWith("image/")) {
-          fileType = "image";
-        } else if (file.mimetype.startsWith("video/")) {
-          fileType = "video";
-        } else if (file.mimetype === "application/pdf") {
-          fileType = "pdf";
-        } else if (
-          file.mimetype.includes("word") ||
-          file.mimetype.includes("document") ||
-          file.mimetype.includes("text")
-        ) {
-          fileType = "document";
-        }
-
+        console.log("Processing answer file:", file);
         return {
           filename: file.filename,
           originalName: file.originalname,
           url: `/uploads/${file.filename}`,
-          fileType,
+          fileType: "image",
           mimeType: file.mimetype,
           size: file.size,
         };
       });
+      console.log("Created answer attachments:", req.body.attachments);
     }
 
     // Auto-approve for verified teachers

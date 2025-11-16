@@ -20,7 +20,7 @@ router.post(
   "/",
   protect,
   moderateContent,
-  upload.array("attachments", 5),
+  upload.array("images", 3),
   createAnswer
 );
 router.put("/:id/vote", protect, voteAnswer);

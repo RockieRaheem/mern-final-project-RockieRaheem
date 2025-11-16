@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
 
 export default function AskQuestion() {
   const navigate = useNavigate();
+  const fileInputRef = useRef();
   const [formData, setFormData] = useState({
     title: "",
     content: "",
     subject: "",
     educationLevel: "A-Level",
-    image: null,
   });
-  const [preview, setPreview] = useState(null);
+  const [attachments, setAttachments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -22,6 +22,18 @@ export default function AskQuestion() {
     "Mathematics",
     "English",
     "History",
+    "Geography",
+    "Computer Science",
+    "Economics",
+    "Literature",
+  ];
+
+  const educationLevels = [
+    "Primary",
+    "O-Level",
+    "A-Level",
+    "Undergraduate",
+    "Postgraduate",
   ];
 
   const handleChange = (e) => {
@@ -29,14 +41,13 @@ export default function AskQuestion() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData((prev) => ({ ...prev, image: file }));
-      const reader = new FileReader();
-      reader.onloadend = () => setPreview(reader.result);
-      reader.readAsDataURL(file);
-    }
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    setAttachments(files);
+  };
+
+  const handleRemoveFile = (indexToRemove) => {
+    setAttachments(attachments.filter((_, index) => index !== indexToRemove));
   };
 
   const handleSubmit = async (e) => {
@@ -63,16 +74,32 @@ export default function AskQuestion() {
 
       const submitData = new FormData();
       submitData.append("title", formData.title);
-      submitData.append("body", formData.content); // backend expects 'body'
+      submitData.append("body", formData.content);
       submitData.append("subject", formData.subject);
-      submitData.append("educationLevel", formData.educationLevel); // backend expects 'educationLevel'
+      submitData.append("educationLevel", formData.educationLevel);
 
-      if (formData.image) {
-        submitData.append("image", formData.image);
+      console.log("========== SUBMITTING QUESTION ==========");
+      console.log("Attachments to upload:", attachments);
+
+      // Append multiple images
+      attachments.forEach((file, index) => {
+        console.log(
+          `Appending file ${index}:`,
+          file.name,
+          file.type,
+          file.size
+        );
+        submitData.append("images", file);
+      });
+
+      // Log all FormData entries
+      console.log("FormData contents:");
+      for (let [key, value] of submitData.entries()) {
+        console.log(`  ${key}:`, value);
       }
+      console.log("=======================================");
 
       const response = await api.questions.create(submitData);
-      // Use correct property for new question ID
       const newId = response.data.data?._id || response.data._id;
       if (newId) {
         navigate(`/questions/${newId}`);
@@ -155,52 +182,60 @@ export default function AskQuestion() {
             {/* Image Upload */}
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold text-text-light-primary dark:text-text-dark-primary">
-                Add an Image (Optional)
+                Add Images (Optional)
               </label>
+              <p className="text-xs text-text-light-secondary dark:text-text-dark-secondary mb-2">
+                Upload up to 3 images (photos of your work, diagrams, etc.)
+              </p>
               <div className="relative flex flex-col items-center justify-center w-full p-6 border-2 border-dashed rounded-lg border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark hover:border-primary/50 transition-colors">
-                {preview ? (
-                  <div className="relative w-full">
-                    <img
-                      src={preview}
-                      alt="Preview"
-                      className="w-full h-48 object-cover rounded-lg"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setPreview(null);
-                        setFormData((prev) => ({ ...prev, image: null }));
-                      }}
-                      className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600"
-                    >
-                      <span className="material-symbols-outlined text-sm">
-                        close
-                      </span>
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <span className="material-symbols-outlined text-4xl text-text-light-secondary dark:text-text-dark-secondary">
-                      upload_file
-                    </span>
-                    <p className="mt-2 text-sm text-text-light-secondary dark:text-text-dark-secondary">
-                      <span className="font-semibold text-primary">
-                        Click to upload
-                      </span>{" "}
-                      or drag and drop
-                    </p>
-                    <p className="text-xs text-text-light-secondary/70 dark:text-text-dark-secondary/70">
-                      SVG, PNG, JPG or GIF (max. 800x400px)
-                    </p>
-                  </>
-                )}
+                <span className="material-symbols-outlined text-4xl text-text-light-secondary dark:text-text-dark-secondary">
+                  add_photo_alternate
+                </span>
+                <p className="mt-2 text-sm text-text-light-secondary dark:text-text-dark-secondary">
+                  <span className="font-semibold text-primary">
+                    Click to upload
+                  </span>{" "}
+                  or drag and drop
+                </p>
+                <p className="text-xs text-text-light-secondary/70 dark:text-text-dark-secondary/70">
+                  PNG, JPG, JPEG (Max 3 images)
+                </p>
                 <input
                   type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
+                  ref={fileInputRef}
+                  multiple
+                  accept="image/png,image/jpeg,image/jpg"
+                  onChange={handleFileChange}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
               </div>
+
+              {/* Image Preview */}
+              {attachments.length > 0 && (
+                <div className="mt-3 grid grid-cols-3 gap-3">
+                  {attachments.map((file, index) => (
+                    <div key={index} className="relative group">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={file.name}
+                        className="w-full h-32 object-cover rounded-lg border border-border-light dark:border-border-dark"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveFile(index)}
+                        className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <span className="material-symbols-outlined text-sm">
+                          close
+                        </span>
+                      </button>
+                      <p className="text-xs text-text-light-secondary dark:text-text-dark-secondary mt-1 truncate">
+                        {file.name}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Subject and Level */}
@@ -229,45 +264,27 @@ export default function AskQuestion() {
                 </select>
               </div>
 
-              {/* Level */}
+              {/* Education Level */}
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-text-light-primary dark:text-text-dark-primary">
-                  Level
+                <label
+                  className="text-sm font-semibold text-text-light-primary dark:text-text-dark-primary"
+                  htmlFor="educationLevel"
+                >
+                  Education Level
                 </label>
-                <div className="grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        educationLevel: "O-Level",
-                      }))
-                    }
-                    className={`flex items-center justify-center rounded-lg h-11 px-4 text-sm font-semibold border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-card-light dark:focus:ring-offset-card-dark focus:ring-primary/50 ${
-                      formData.educationLevel === "O-Level"
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-light-secondary dark:text-text-dark-secondary hover:bg-primary/10 hover:text-primary"
-                    }`}
-                  >
-                    O'Level
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        educationLevel: "A-Level",
-                      }))
-                    }
-                    className={`flex items-center justify-center rounded-lg h-11 px-4 text-sm font-semibold border focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-card-light dark:focus:ring-offset-card-dark focus:ring-primary/50 ${
-                      formData.educationLevel === "A-Level"
-                        ? "border-primary bg-primary/10 text-primary"
-                        : "border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark text-text-light-secondary dark:text-text-dark-secondary hover:bg-primary/10 hover:text-primary"
-                    }`}
-                  >
-                    A'Level
-                  </button>
-                </div>
+                <select
+                  className="form-select w-full rounded-lg border border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark py-2.5 pl-4 pr-10 text-text-light-primary dark:text-text-dark-primary focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  id="educationLevel"
+                  name="educationLevel"
+                  value={formData.educationLevel}
+                  onChange={handleChange}
+                >
+                  {educationLevels.map((level) => (
+                    <option key={level} value={level}>
+                      {level}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 

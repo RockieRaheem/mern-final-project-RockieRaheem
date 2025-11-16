@@ -105,34 +105,26 @@ export const createQuestion = async (req, res, next) => {
     // Add user to req.body
     req.body.author = req.user.id;
 
-    // Handle file uploads if any
+    // DEBUG: Log what we receive
+    console.log("========== CREATE QUESTION DEBUG ==========");
+    console.log("req.files:", req.files);
+    console.log("req.body:", req.body);
+    console.log("==========================================");
+
+    // Handle image uploads if any (images only)
     if (req.files && req.files.length > 0) {
       req.body.attachments = req.files.map((file) => {
-        // Determine file type based on mimetype
-        let fileType = "other";
-        if (file.mimetype.startsWith("image/")) {
-          fileType = "image";
-        } else if (file.mimetype.startsWith("video/")) {
-          fileType = "video";
-        } else if (file.mimetype === "application/pdf") {
-          fileType = "pdf";
-        } else if (
-          file.mimetype.includes("word") ||
-          file.mimetype.includes("document") ||
-          file.mimetype.includes("text")
-        ) {
-          fileType = "document";
-        }
-
+        console.log("Processing file:", file);
         return {
           filename: file.filename,
           originalName: file.originalname,
           url: `/uploads/${file.filename}`,
-          fileType,
+          fileType: "image",
           mimeType: file.mimetype,
           size: file.size,
         };
       });
+      console.log("Created attachments:", req.body.attachments);
     }
 
     // Check if flagged by moderation middleware

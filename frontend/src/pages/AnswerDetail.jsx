@@ -9,6 +9,8 @@ export default function AnswerDetail() {
   const [question, setQuestion] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [helpfulCount, setHelpfulCount] = useState(0);
+  const [userVote, setUserVote] = useState(null);
 
   useEffect(() => {
     async function fetchAnswer() {
@@ -18,149 +20,27 @@ export default function AnswerDetail() {
         const res = await api.answers.getById(answerId);
         const a = res.data?.data || res.data;
         setAnswer(a);
-        
-        // Fetch the related question
+        setHelpfulCount(a.upvotes?.length || 0);
+
+        // Backend now populates question
         if (a.question) {
-          const questionRes = await api.questions.getById(a.question);
-          const q = questionRes.data?.data || questionRes.data;
-          setQuestion(q);
+          if (typeof a.question === "object" && a.question.title) {
+            setQuestion(a.question);
+          } else if (typeof a.question === "string") {
+            const questionRes = await api.questions.getById(a.question);
+            const q = questionRes.data?.data || questionRes.data;
+            setQuestion(q);
+          }
         }
       } catch (err) {
         console.error("Failed to load answer", err);
         setError("Failed to load answer");
-        setAnswer(null);
       } finally {
         setLoading(false);
       }
     }
     fetchAnswer();
   }, [answerId]);
-
-  const handleUpvote = async () => {
-    try {
-      await api.answers.vote(answerId, { voteType: "upvote" });
-      setAnswer((prev) => ({
-        ...prev,
-        upvotes: [...(prev.upvotes || []), "temp"],
-      }));
-    } catch (err) {
-      console.error("Failed to upvote", err);
-    }
-  };
-
-  const handleDownvote = async () => {
-    try {
-      await api.answers.vote(answerId, { voteType: "downvote" });
-      setAnswer((prev) => ({
-        ...prev,
-        downvotes: [...(prev.downvotes || []), "temp"],
-      }));
-    } catch (err) {
-      console.error("Failed to downvote", err);
-    }
-  };
-
-  const getFileIcon = (fileType) => {
-    switch (fileType) {
-      case 'image': return 'image';
-      case 'video': return 'videocam';
-      case 'pdf': return 'picture_as_pdf';
-      case 'document': return 'description';
-      default: return 'attachment';
-    }
-  };
-
-  const renderAttachment = (attachment, index) => {
-    const fileUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${attachment.url}`;
-    
-    return (
-      <div key={index} className="mt-4 border border-border-light dark:border-border-dark rounded-lg overflow-hidden">
-        {attachment.fileType === 'image' && (
-          <div className="relative group">
-            <img
-              src={fileUrl}
-              alt={attachment.originalName || 'Attachment'}
-              className="w-full max-h-96 object-contain bg-gray-50 dark:bg-gray-900"
-            />
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-              <div className="flex items-center justify-between">
-                <span className="text-white text-sm">{attachment.originalName}</span>
-                <a
-                  href={fileUrl}
-                  download={attachment.originalName}
-                  className="flex items-center gap-1 text-white hover:text-primary"
-                >
-                  <span className="material-symbols-outlined text-xl">download</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        {attachment.fileType === 'video' && (
-          <div className="bg-black">
-            <video
-              controls
-              className="w-full max-h-96"
-              preload="metadata"
-            >
-              <source src={fileUrl} type={attachment.mimeType} />
-              Your browser does not support the video tag.
-            </video>
-            <div className="bg-gray-800 p-3 flex items-center justify-between">
-              <span className="text-white text-sm">{attachment.originalName}</span>
-              <a
-                href={fileUrl}
-                download={attachment.originalName}
-                className="flex items-center gap-1 text-white hover:text-primary"
-              >
-                <span className="material-symbols-outlined text-xl">download</span>
-              </a>
-            </div>
-          </div>
-        )}
-        
-        {(attachment.fileType === 'pdf' || attachment.fileType === 'document') && (
-          <div className="bg-gray-50 dark:bg-gray-900 p-6">
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-16 h-16 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
-                <span className="material-symbols-outlined text-3xl text-red-600 dark:text-red-400">
-                  {getFileIcon(attachment.fileType)}
-                </span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-text-light-primary dark:text-text-dark-primary truncate">
-                  {attachment.originalName}
-                </h4>
-                <p className="text-sm text-text-light-secondary dark:text-text-dark-secondary mt-1">
-                  {attachment.size ? `${(attachment.size / 1024).toFixed(2)} KB` : 'File'}
-                </p>
-                <div className="flex gap-3 mt-3">
-                  <a
-                    href={fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-sm text-primary hover:text-primary/80"
-                  >
-                    <span className="material-symbols-outlined text-lg">visibility</span>
-                    View
-                  </a>
-                  <a
-                    href={fileUrl}
-                    download={attachment.originalName}
-                    className="flex items-center gap-1 text-sm text-primary hover:text-primary/80"
-                  >
-                    <span className="material-symbols-outlined text-lg">download</span>
-                    Download
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
 
   if (loading) {
     return (
@@ -197,183 +77,176 @@ export default function AnswerDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-background-light dark:bg-background-dark">
-      <div className="max-w-5xl mx-auto p-6 lg:p-10">
-        {/* Back Button */}
-        <button
-          onClick={() => question ? navigate(`/questions/${question._id}`) : navigate(-1)}
-          className="flex items-center gap-2 text-text-light-secondary dark:text-text-dark-secondary hover:text-primary mb-6 transition-colors"
-        >
-          <span className="material-symbols-outlined">arrow_back</span>
-          <span>Back to Question</span>
-        </button>
-
-        {/* Related Question Preview */}
-        {question && (
-          <div
-            onClick={() => navigate(`/questions/${question._id}`)}
-            className="bg-card-light dark:bg-card-dark rounded-xl shadow-sm border border-border-light dark:border-border-dark p-6 mb-6 cursor-pointer hover:shadow-lg hover:border-primary/50 transition-all"
+    <div className="relative flex min-h-screen w-full flex-col font-display bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
+      {/* Header */}
+      <header className="flex items-center justify-between whitespace-nowrap border-b border-border-light dark:border-border-dark px-4 sm:px-6 lg:px-10 py-3 bg-surface-light dark:bg-surface-dark sticky top-0 z-10">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate("/")}
+            className="flex items-center gap-3 text-text-light dark:text-text-dark"
           >
-            <div className="flex items-center gap-2 mb-2">
-              <span className="material-symbols-outlined text-primary">help</span>
-              <span className="text-sm font-semibold text-text-light-secondary dark:text-text-dark-secondary">
-                Question
-              </span>
-            </div>
-            <h2 className="text-xl font-bold text-text-light-primary dark:text-text-dark-primary mb-2">
-              {question.title}
-            </h2>
-            <p className="text-text-light-secondary dark:text-text-dark-secondary line-clamp-2">
-              {question.body || question.content}
-            </p>
-          </div>
-        )}
+            <svg
+              className="h-8 w-8 text-primary"
+              fill="currentColor"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g clipPath="url(#clip0_6_319)">
+                <path d="M8.57829 8.57829C5.52816 11.6284 3.451 15.5145 2.60947 19.7452C1.76794 23.9758 2.19984 28.361 3.85056 32.3462C5.50128 36.3314 8.29667 39.7376 11.8832 42.134C15.4698 44.5305 19.6865 45.8096 24 45.8096C28.3135 45.8096 32.5302 44.5305 36.1168 42.134C39.7033 39.7375 42.4987 36.3314 44.1494 32.3462C45.8002 28.361 46.2321 23.9758 45.3905 19.7452C44.549 15.5145 42.4718 11.6284 39.4217 8.57829L24 24L8.57829 8.57829Z"></path>
+              </g>
+              <defs>
+                <clipPath id="clip0_6_319">
+                  <rect fill="white" height="48" width="48"></rect>
+                </clipPath>
+              </defs>
+            </svg>
+            <h2 className="text-xl font-bold leading-tight">Edulink</h2>
+          </button>
+        </div>
+        <div className="flex items-center gap-2">
+          <button className="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark hover:bg-zinc-200 dark:hover:bg-zinc-800">
+            <span className="material-symbols-outlined text-2xl">
+              notifications
+            </span>
+          </button>
+          <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 bg-gray-300"></div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="w-full max-w-5xl mx-auto flex-1 p-4 sm:p-6 lg:p-8">
+        {/* Back Button */}
+        <div className="mb-6">
+          <button
+            onClick={() =>
+              question
+                ? navigate(`/questions/${question._id || question.id}`)
+                : navigate(-1)
+            }
+            className="inline-flex items-center gap-1.5 text-sm text-text-muted-light dark:text-text-muted-dark hover:text-primary transition-colors"
+          >
+            <span className="material-symbols-outlined text-base">
+              arrow_back
+            </span>
+            Back to Question
+          </button>
+        </div>
 
         {/* Answer Card */}
-        <div className="bg-card-light dark:bg-card-dark rounded-2xl shadow-lg border border-border-light dark:border-border-dark overflow-hidden">
-          {/* Answer Header */}
-          <div className="p-6 border-b border-border-light dark:border-border-dark bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20">
-            <div className="flex items-start gap-4">
-              <img
-                src={
-                  answer.author?.avatar ||
-                  `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                    answer.author?.name || "User"
-                  )}&background=10b981&color=fff`
+        <div className="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark shadow-sm">
+          {/* Answer Content */}
+          <div className="p-6 sm:p-8">
+            <div className="flex items-start gap-4 mb-4">
+              <div
+                className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 flex-shrink-0 bg-gray-300"
+                style={
+                  answer.author?.avatar
+                    ? { backgroundImage: `url(${answer.author.avatar})` }
+                    : {}
                 }
-                alt={answer.author?.name}
-                className="w-16 h-16 rounded-full ring-4 ring-green-500/30"
-              />
+              ></div>
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <h3 className="text-2xl font-bold text-text-light-primary dark:text-text-dark-primary">
-                    {answer.author?.name || "Anonymous"}
-                  </h3>
-                  {answer.author?.verified && (
-                    <span
-                      className="material-symbols-outlined text-blue-500 text-xl"
-                      style={{ fontVariationSettings: "'FILL' 1" }}
-                    >
-                      verified
-                    </span>
-                  )}
-                  {answer.author?.role === "teacher" && (
-                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
-                      TEACHER
-                    </span>
-                  )}
-                  {answer.isAccepted && (
-                    <span className="text-sm font-semibold px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 flex items-center gap-1">
-                      <span
-                        className="material-symbols-outlined"
-                        style={{ fontVariationSettings: "'FILL' 1" }}
-                      >
-                        check_circle
-                      </span>
-                      ACCEPTED ANSWER
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center gap-3 text-sm text-text-light-secondary dark:text-text-dark-secondary flex-wrap">
-                  {answer.author?.school && (
-                    <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-base">school</span>
-                      <span>{answer.author.school}</span>
-                    </div>
-                  )}
-                  {answer.author?.educationLevel && (
-                    <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-base">workspace_premium</span>
-                      <span>{answer.author.educationLevel}</span>
-                    </div>
-                  )}
-                  {answer.author?.email && (
-                    <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-base">mail</span>
-                      <span>{answer.author.email}</span>
-                    </div>
-                  )}
-                </div>
-                <div className="flex items-center gap-1 text-xs text-text-light-secondary dark:text-text-dark-secondary mt-2">
-                  <span className="material-symbols-outlined text-base">schedule</span>
-                  <span>
-                    {new Date(answer.createdAt).toLocaleDateString("en-US", {
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
-                </div>
+                <p className="font-semibold text-text-light dark:text-text-dark">
+                  {answer.author?.name || "Anonymous"}
+                </p>
+                <p className="text-sm text-text-muted-light dark:text-text-muted-dark">
+                  Answered on{" "}
+                  {new Date(answer.createdAt).toLocaleDateString("en-US", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
               </div>
             </div>
-          </div>
 
-          {/* Answer Content */}
-          <div className="p-8">
-            <div className="prose dark:prose-invert prose-lg max-w-none">
-              <p className="text-text-light-primary dark:text-text-dark-primary leading-relaxed whitespace-pre-wrap text-lg">
+            <div className="prose prose-lg max-w-none text-text-light dark:text-text-dark">
+              <p className="whitespace-pre-wrap leading-relaxed">
                 {answer.body || answer.content}
               </p>
             </div>
-
-            {/* Answer Attachments */}
-            {answer.attachments && answer.attachments.length > 0 && (
-              <div className="mt-8">
-                <h3 className="text-lg font-bold text-text-light-primary dark:text-text-dark-primary mb-4 flex items-center gap-2">
-                  <span className="material-symbols-outlined text-2xl text-primary">attach_file</span>
-                  Attachments ({answer.attachments.length})
-                </h3>
-                <div className="space-y-4">
-                  {answer.attachments.map((attachment, index) => 
-                    renderAttachment(attachment, index)
-                  )}
-                </div>
-              </div>
-            )}
           </div>
 
-          {/* Answer Actions */}
-          <div className="px-8 py-6 border-t border-border-light dark:border-border-dark bg-gray-50 dark:bg-gray-900/30">
-            <div className="flex items-center justify-between flex-wrap gap-4">
-              <div className="flex items-center gap-6">
-                <button
-                  onClick={handleUpvote}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
-                >
-                  <span className="material-symbols-outlined text-xl">thumb_up</span>
-                  <span className="font-semibold">
-                    {Array.isArray(answer.upvotes) ? answer.upvotes.length : answer.upvotes || 0}
-                  </span>
-                </button>
-                <button
-                  onClick={handleDownvote}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
-                >
-                  <span className="material-symbols-outlined text-xl">thumb_down</span>
-                  <span className="font-semibold">
-                    {Array.isArray(answer.downvotes) ? answer.downvotes.length : answer.downvotes || 0}
-                  </span>
-                </button>
+          {/* Images Section */}
+          {answer.attachments && answer.attachments.length > 0 && (
+            <div className="border-t border-border-light dark:border-border-dark p-6 sm:p-8">
+              <h3 className="text-lg font-semibold text-text-light dark:text-text-dark mb-4">
+                Images
+              </h3>
+              <div className="space-y-4">
+                {answer.attachments.map((attachment, index) => {
+                  // Remove /api from the URL since uploads are served from root
+                  const baseUrl = (
+                    import.meta.env.VITE_API_URL || "http://localhost:5001/api"
+                  ).replace("/api", "");
+                  const fileUrl = `${baseUrl}${attachment.url}`;
+
+                  return (
+                    <div key={index} className="my-3">
+                      <img
+                        src={fileUrl}
+                        alt={attachment.originalName || `Image ${index + 1}`}
+                        className="w-full max-w-3xl rounded-lg border border-border-light dark:border-border-dark shadow-sm hover:shadow-md transition-shadow"
+                        loading="lazy"
+                      />
+                    </div>
+                  );
+                })}
               </div>
-              {answer.verifiedBy && (
-                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-                  <span
-                    className="material-symbols-outlined"
-                    style={{ fontVariationSettings: "'FILL' 1" }}
-                  >
-                    verified
-                  </span>
-                  <span className="font-semibold">
-                    Verified by {answer.verifiedBy.name}
-                  </span>
-                </div>
-              )}
             </div>
+          )}
+
+          {/* Actions Footer */}
+          <div className="border-t border-border-light dark:border-border-dark p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => {
+                  setUserVote("helpful");
+                  setHelpfulCount((prev) => prev + 1);
+                }}
+                className={`flex items-center gap-2 transition-colors ${
+                  userVote === "helpful"
+                    ? "text-primary"
+                    : "text-text-muted-light dark:text-text-muted-dark hover:text-primary"
+                }`}
+              >
+                <span className="material-symbols-outlined">thumb_up</span>
+                <span className="text-sm font-medium">
+                  Helpful ({helpfulCount})
+                </span>
+              </button>
+              <button className="flex items-center gap-2 text-text-muted-light dark:text-text-muted-dark hover:text-red-500 transition-colors">
+                <span className="material-symbols-outlined">thumb_down</span>
+                <span className="text-sm font-medium">Not Helpful</span>
+              </button>
+            </div>
+            <button className="flex items-center gap-2 text-text-muted-light dark:text-text-muted-dark hover:text-text-light dark:hover:text-text-dark transition-colors">
+              <span className="material-symbols-outlined">flag</span>
+              <span className="text-sm font-medium">Report</span>
+            </button>
           </div>
         </div>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="w-full text-center p-6 mt-8 text-text-muted-light dark:text-text-muted-dark">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <div className="h-4 w-6">
+            <svg viewBox="0 0 60 40" xmlns="http://www.w3.org/2000/svg">
+              <rect fill="#000000" height="40" width="60"></rect>
+              <rect fill="#FCDC04" height="13.33" width="60" y="13.33"></rect>
+              <rect fill="#D90000" height="13.33" width="60" y="26.67"></rect>
+            </svg>
+          </div>
+          <p className="text-sm">For God and My Country</p>
+        </div>
+        <p className="text-xs">© 2024 Edulink. All rights reserved.</p>
+      </footer>
+
+      {/* Chatbot FAB */}
+      <button className="fixed bottom-6 right-6 flex h-14 w-14 cursor-pointer items-center justify-center rounded-full bg-primary text-white shadow-lg transition-transform hover:scale-105">
+        <span className="material-symbols-outlined text-3xl">smart_toy</span>
+      </button>
     </div>
   );
 }
