@@ -53,16 +53,15 @@ export const chatWithBot = async (req, res, next) => {
       });
     }
 
-    // Get bot response
-    const botResponse = getSimpleBotResponse(message, context);
+    // Get AI response from Gemini
+    const botResponse = await getAIResponse(message, context);
 
-    // Save chat history
-    const chat = await Chat.create({
+    // Save user message
+    await Chat.create({
       user: req.user.id,
       message,
       role: "user",
       context,
-      botResponse,
     });
 
     // Save bot response
