@@ -23,7 +23,13 @@ router.post("/test-upload", debugUpload.any(), (req, res) => {
 
 router.get("/question/:questionId", getAnswersForQuestion);
 router.get("/:id", getAnswerById);
-router.post("/", protect, moderateContent, upload.any(), createAnswer);
+router.post(
+  "/",
+  protect,
+  moderateContent,
+  upload.array("attachments"),
+  createAnswer
+);
 router.put("/:id/vote", protect, voteAnswer);
 router.put("/:id/accept", protect, acceptAnswer);
 router.put("/:id/verify", protect, authorize("teacher", "admin"), verifyAnswer);
