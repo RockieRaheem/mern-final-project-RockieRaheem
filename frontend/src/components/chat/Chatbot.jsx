@@ -38,12 +38,18 @@ export default function Chatbot() {
         context: messages.slice(-5), // Send last 5 messages for context
       });
 
+      console.log("🤖 Chatbot response:", response.data);
+
       const botMessage = {
         role: "assistant",
-        content: response.data.response,
+        content:
+          response.data.data.botResponse ||
+          response.data.response ||
+          "No response received",
       };
       setMessages((prev) => [...prev, botMessage]);
-    } catch {
+    } catch (error) {
+      console.error("❌ Chatbot error:", error);
       const errorMessage = {
         role: "assistant",
         content: "Sorry, I encountered an error. Please try again.",
