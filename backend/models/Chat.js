@@ -10,7 +10,7 @@ const chatSchema = new mongoose.Schema(
     message: {
       type: String,
       required: true,
-      maxlength: [1000, "Message cannot be more than 1000 characters"],
+      maxlength: [2000, "Message cannot be more than 2000 characters"],
     },
     role: {
       type: String,
