@@ -39,22 +39,51 @@ const getAIResponse = async (message, context = "") => {
 
     // Initialize Gemini AI with fresh instance each time
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     // Build prompt with context
     const fullPrompt = context
       ? `${SYSTEM_PROMPT}\n\nContext: ${context}\n\nStudent Question: ${message}`
       : `${SYSTEM_PROMPT}\n\nStudent Question: ${message}`;
 
-    console.log("📝 Sending prompt to Gemini...");
-    const result = await model.generateContent(fullPrompt);
-    const response = await result.response;
-    const text = response.text();
+    // Try a list of candidate models (in order). If one fails (404/503), fall back to the next.
+    const candidateModels = [
+      "gemini-2.5-pro",
+      "gemini-2.5-flash",
+      "gemini-2.0-flash",
+      "gemini-2.0-flash-001",
+    ];
 
     console.log(
-      "✅ Gemini response received:",
-      text?.substring(0, 100) + "..."
+      "📝 Attempting to generate with candidate models:",
+      candidateModels
     );
+
+    let text = null;
+    for (const modelName of candidateModels) {
+      try {
+        console.log(`🔁 Trying model: ${modelName}`);
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent(fullPrompt);
+        const response = await result.response;
+        text = response.text();
+
+        if (text) {
+          console.log(
+            `✅ Gemini response received from ${modelName}:`,
+            text?.substring(0, 120) + "..."
+          );
+          break;
+        }
+      } catch (err) {
+        // Log and try the next model
+        console.warn(
+          `⚠️ Model ${modelName} failed:`,
+          err?.status || err?.message || err
+        );
+        // continue to next candidate
+      }
+    }
+
     return text || getFallbackResponse(message);
   } catch (error) {
     console.error("❌ Gemini AI Error:", error.message);
@@ -180,26 +209,64 @@ export const chatWithBot = async (req, res, next) => {
       });
     }
 
+    // Coerce message to string (defensive) and trim
+    let userMessage =
+      typeof message === "string" ? message.trim() : JSON.stringify(message);
+
+    // Enforce max length to avoid Mongoose validation errors; truncate if necessary
+    const MAX_MESSAGE_LENGTH = 1000;
+    if (userMessage.length > MAX_MESSAGE_LENGTH) {
+      // truncate and continue, but also inform in logs
+      console.warn(
+        "⚠️ User message too long, truncating to %d characters",
+        MAX_MESSAGE_LENGTH
+      );
+      userMessage = userMessage.substring(0, MAX_MESSAGE_LENGTH);
+    }
+
     // Get AI response from Gemini
     console.log("🔄 Getting AI response...");
     const botResponse = await getAIResponse(message, context);
     console.log("📤 Bot response:", botResponse);
 
-    // Save user message
+    // Save user message (use coerced/truncated userMessage)
     await Chat.create({
       user: req.user.id,
-      message,
+      message: userMessage,
       role: "user",
       context,
     });
 
-    // Save bot response
-    await Chat.create({
-      user: req.user.id,
-      message: botResponse,
-      role: "bot",
-      context,
-    });
+    // Save bot response: coerce and truncate the stored `message` to schema limit,
+    // but keep the full AI text in `botResponse` field so nothing is lost.
+    let botMessageForDB =
+      typeof botResponse === "string"
+        ? botResponse.trim()
+        : JSON.stringify(botResponse);
+    if (botMessageForDB.length > MAX_MESSAGE_LENGTH) {
+      console.warn(
+        "⚠️ Bot response too long, truncating stored message to %d characters",
+        MAX_MESSAGE_LENGTH
+      );
+      const fullBotResponse = botMessageForDB;
+      botMessageForDB = botMessageForDB.substring(0, MAX_MESSAGE_LENGTH);
+
+      await Chat.create({
+        user: req.user.id,
+        message: botMessageForDB,
+        role: "bot",
+        context,
+        botResponse: fullBotResponse,
+      });
+    } else {
+      await Chat.create({
+        user: req.user.id,
+        message: botMessageForDB,
+        role: "bot",
+        context,
+        botResponse: botMessageForDB,
+      });
+    }
 
     console.log("✅ Chat saved successfully");
 

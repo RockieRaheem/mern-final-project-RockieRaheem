@@ -49,10 +49,13 @@ export default function Chatbot() {
       };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
-      console.error("❌ Chatbot error:", error);
+      // Log full server response when available to aid debugging
+      console.error("❌ Chatbot error:", error.response?.data || error);
       const errorMessage = {
         role: "assistant",
-        content: "Sorry, I encountered an error. Please try again.",
+        content:
+          error.response?.data?.message ||
+          "Sorry, I encountered an error. Please try again.",
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {

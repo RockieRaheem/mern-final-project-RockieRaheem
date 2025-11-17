@@ -17,13 +17,10 @@ const chatSchema = new mongoose.Schema(
       enum: ["user", "bot"],
       required: true,
     },
+    // Context can store arbitrary data about the conversation (keeps flexible)
     context: {
-      subject: String,
-      topic: String,
-      relatedQuestion: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Question",
-      },
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
     },
     sentiment: {
       type: String,
