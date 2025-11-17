@@ -7,7 +7,7 @@ export default function Chatbot() {
     {
       role: "assistant",
       content:
-        "Hello! I'm EduBot, your AI study assistant. How can I help you today? 📚",
+        "Hello. I am EduBot, your AI study assistant. How can I help you today?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -90,6 +90,80 @@ export default function Chatbot() {
     setInput(action);
   };
 
+  // Sanitize and format assistant messages for a clean, professional display.
+  // - Remove simple markdown markers (**, *, __, _, backticks)
+  // - Strip common emoji/pictographs where possible
+  // - Convert numbered lists and bullet lines into <ol>/<ul>
+  // - Preserve paragraph breaks
+  const sanitizeText = (text) => {
+    if (!text && text !== 0) return "";
+    let s = String(text);
+
+    // Remove simple markdown emphasis markers
+    s = s.replace(/\*\*|__|\*|_/g, "");
+    // Remove inline code/backticks
+    s = s.replace(/`+/g, "");
+
+    // Remove common emoji / pictograph characters (best-effort)
+    try {
+      s = s.replace(/\p{Extended_Pictographic}/gu, "");
+    } catch {
+      // If the environment doesn't support Unicode property escapes, fall back to a small set
+      s = s.replace(/[\u{1F300}-\u{1F6FF}\u{2600}-\u{26FF}]/gu, "");
+    }
+
+    // Trim excess whitespace and normalize newlines
+    s = s.replace(/\r\n/g, "\n").trim();
+    return s;
+  };
+
+  const renderFormattedContent = (raw) => {
+    const text = sanitizeText(raw || "");
+    if (!text) return null;
+
+    // Split into blocks by blank lines to form paragraphs
+    const blocks = text.split(/\n{2,}/g).map((b) => b.trim());
+
+    return blocks.map((block, i) => {
+      const lines = block.split(/\n+/g).map((l) => l.trim());
+
+      // If every line looks like an ordered list item (e.g., '1. Step'), render <ol>
+      const isOrdered = lines.every((l) => /^\d+\.\s+/.test(l));
+      if (isOrdered) {
+        return (
+          <ol className="list-decimal ml-5 mb-2" key={i}>
+            {lines.map((l, idx) => (
+              <li key={idx} className="text-sm leading-relaxed">
+                {l.replace(/^\d+\.\s+/, "")}
+              </li>
+            ))}
+          </ol>
+        );
+      }
+
+      // If many lines begin with bullet markers, render <ul>
+      const isBullet = lines.every((l) => /^[-*+]\s+/.test(l));
+      if (isBullet) {
+        return (
+          <ul className="list-disc ml-5 mb-2" key={i}>
+            {lines.map((l, idx) => (
+              <li key={idx} className="text-sm leading-relaxed">
+                {l.replace(/^[-*+]\s+/, "")}
+              </li>
+            ))}
+          </ul>
+        );
+      }
+
+      // Otherwise render as a paragraph (preserve single-line breaks)
+      return (
+        <p key={i} className="text-sm leading-relaxed whitespace-pre-wrap mb-2">
+          {lines.join("\n")}
+        </p>
+      );
+    });
+  };
+
   return (
     <>
       {/* Floating Button */}
@@ -145,9 +219,11 @@ export default function Chatbot() {
                       : "bg-surface-light dark:bg-surface-dark text-text-light-primary dark:text-text-dark-primary rounded-bl-sm"
                   }`}
                 >
-                  <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                    {message.content}
-                  </p>
+                  <div className="text-sm leading-relaxed whitespace-pre-wrap">
+                    {message.role === "assistant"
+                      ? renderFormattedContent(message.content)
+                      : message.content}
+                  </div>
                 </div>
               </div>
             ))}

@@ -4,20 +4,19 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 // System prompt for educational context
 const SYSTEM_PROMPT = `You are EduBot, an AI tutor for EduLink Uganda - a platform for O-Level and A-Level students.
 Your role is to:
-- Help with Biology, Chemistry, Physics, Mathematics, English, History, Geography, and Economics
-- Explain concepts clearly for Ugandan secondary school students
-- Provide step-by-step solutions for academic problems
-- Guide students on using the EduLink platform features
-- Be encouraging and supportive
+- Assist with Biology, Chemistry, Physics, Mathematics, English, History, Geography, and Economics.
+- Explain concepts clearly and concisely for Ugandan secondary school students.
+- Provide step-by-step solutions for academic problems and illustrative examples when helpful.
+- Guide students on using the EduLink platform features.
 
 IMPORTANT FORMATTING RULES:
-- Keep responses concise (under 250 words), friendly, and educational
-- Use simple language suitable for students
-- NEVER use markdown formatting like **bold**, *italic*, or \`code\`
-- Use plain text only - no asterisks, underscores, or backticks
-- For emphasis, use natural language like "important" or "key point"
-- For lists, use numbers or simple bullets without markdown
-- Format responses like ChatGPT: natural, conversational, easy to read`;
+- Use clear, professional, and neutral language appropriate for students and educators.
+- Keep responses concise (preferably under 250 words) and use simple vocabulary suitable for the target audience.
+- Avoid markdown formatting (do not use bold, italics, asterisks, underscores, backticks, or other markup) and avoid emojis.
+- Use plain text only; for emphasis prefer natural language such as "important" or "key point".
+- When answering multi-step problems, number steps or use short paragraphs for clarity.
+- For lists, use numbered steps or simple bullets (rendered as plain text) rather than markdown list syntax.
+- Format responses in a natural, conversational, easy-to-read style similar to professional tutoring assistants.`;
 
 // Get AI response from Gemini
 const getAIResponse = async (message, context = "") => {
@@ -120,7 +119,7 @@ const getFallbackResponse = (message) => {
 
   // Science subjects
   if (msg.includes("science")) {
-    return "Science is the study of the natural world through observation and experimentation. It includes Biology (study of living things), Chemistry (study of matter), and Physics (study of energy and forces). Which area interests you most?";
+    return "Science is the study of the natural world through observation and experimentation. It includes Biology (the study of living organisms), Chemistry (the study of matter and its changes), and Physics (the study of energy and forces). Which area would you like to explore?";
   }
 
   if (
@@ -128,7 +127,27 @@ const getFallbackResponse = (message) => {
     msg.includes("cell") ||
     msg.includes("organ")
   ) {
-    return "Biology studies living organisms! Topics include cells, genetics, ecology, human body systems, and evolution. What specific biology topic would you like to learn about?";
+    return "Biology is the study of living organisms. Common topics include cells, genetics, ecology, human body systems, and evolution. Which biology topic would you like to learn about?";
+  }
+
+  // Protein synthesis / transcription & translation
+  if (
+    msg.includes("protein") ||
+    msg.includes("protein synthesis") ||
+    msg.includes("transcription") ||
+    msg.includes("translation")
+  ) {
+    return (
+      "Protein synthesis is the process by which cells produce proteins from genetic information. " +
+      "It occurs in two main stages:\n\n" +
+      "1. Transcription:\n" +
+      "   The cell copies the relevant section of DNA into messenger RNA (mRNA) inside the nucleus. " +
+      "The mRNA carries the genetic instructions out of the nucleus to the cytoplasm.\n\n" +
+      "2. Translation:\n" +
+      "   Ribosomes read the mRNA in groups of three bases (codons). Transfer RNA (tRNA) brings the matching amino acids to the ribosome, which links them together to form a polypeptide chain.\n\n" +
+      "After the chain is formed, it folds into its functional three-dimensional shape. The overall flow is: DNA → mRNA → protein. " +
+      "Would you like a more detailed explanation of any of these steps?"
+    );
   }
 
   if (
@@ -136,7 +155,7 @@ const getFallbackResponse = (message) => {
     msg.includes("atom") ||
     msg.includes("molecule")
   ) {
-    return "Chemistry explores matter and its changes. Key topics: atoms, molecules, chemical reactions, acids & bases, and the periodic table. What chemistry concept shall we discuss?";
+    return "Chemistry explores matter and its changes. Key topics include atoms, molecules, chemical reactions, acids and bases, and the periodic table. Which chemistry concept would you like to discuss?";
   }
 
   if (
@@ -144,7 +163,7 @@ const getFallbackResponse = (message) => {
     msg.includes("force") ||
     msg.includes("energy")
   ) {
-    return "Physics studies matter, energy, and their interactions. Topics include motion, forces, electricity, magnetism, and waves. Which physics topic interests you?";
+    return "Physics studies matter, energy, and their interactions. Topics include motion, forces, electricity, magnetism, and waves. Which physics topic would you like to study?";
   }
 
   if (
@@ -152,33 +171,33 @@ const getFallbackResponse = (message) => {
     msg.includes("equation") ||
     msg.includes("solve")
   ) {
-    return "I can help with Mathematics! Topics include algebra, geometry, trigonometry, calculus, and statistics. What math problem are you working on?";
+    return "I can help with Mathematics. Topics include algebra, geometry, trigonometry, calculus, and statistics. What math problem or topic are you working on?";
   }
 
   if (msg.includes("quadratic")) {
-    return "To solve quadratic equations: 1) Factoring, 2) Completing the square, 3) Quadratic formula: x = [-b ± √(b²-4ac)] / 2a. Which method would you like explained?";
+    return "To solve quadratic equations you can use: 1) Factoring, 2) Completing the square, or 3) the quadratic formula x = [-b ± √(b² - 4ac)] / (2a). Which method would you like explained?";
   }
 
   if (msg.includes("photosynthesis")) {
-    return "Photosynthesis: 6CO₂ + 6H₂O + light → C₆H₁₂O₆ + 6O₂. Plants convert light energy to chemical energy in chloroplasts. Want to know about the light/dark reactions?";
+    return "Photosynthesis is the process by which plants convert light energy into chemical energy. The simplified equation is: 6 CO₂ + 6 H₂O + light → C₆H₁₂O₆ + 6 O₂. Would you like an explanation of the light-dependent and light-independent reactions?";
   }
 
   if (msg.includes("newton") && msg.includes("law")) {
-    return "Newton's Laws: 1st (Inertia) - Objects resist motion changes. 2nd - F = ma (Force = mass × acceleration). 3rd - Action-reaction pairs. Which law shall we explore?";
+    return "Newton's Laws of Motion are: 1) Law of Inertia, 2) F = ma (force equals mass times acceleration), and 3) action-reaction pairs. Which law would you like to explore in more detail?";
   }
 
   // Study help
   if (msg.includes("study") || msg.includes("exam") || msg.includes("test")) {
-    return "Study tips: 1) Review notes daily, 2) Practice past papers, 3) Join study groups, 4) Use EduLink to ask questions, 5) Take breaks. Need help with a specific subject?";
+    return "Study tips: 1) Review your notes regularly, 2) Practice past examination papers, 3) Join a study group, 4) Use EduLink to ask specific questions, and 5) take regular short breaks. Do you need help with a particular subject?";
   }
 
   if (msg.includes("homework") || msg.includes("assignment")) {
-    return "I can guide you through homework! Post your question on EduLink with details about what you've tried. Our community and teachers will help you understand the solution step-by-step.";
+    return "I can guide you through homework. Please post your question on EduLink with details of what you have tried so far. Teachers and the community can then help you understand the solution step by step.";
   }
 
   // Platform help
   if (msg.includes("ask") || msg.includes("post") || msg.includes("question")) {
-    return "To ask a question: Click 'Ask Question' → Write clear title → Add details → Select subject/topic → Attach images if needed. Your question will get answers from the community!";
+    return "To ask a question on EduLink: click 'Ask Question', write a clear title, add full details, select the relevant subject or topic, and attach images if needed. This helps the community provide useful answers.";
   }
 
   if (
@@ -186,7 +205,7 @@ const getFallbackResponse = (message) => {
     msg.includes("respond") ||
     msg.includes("reply")
   ) {
-    return "To answer questions: Browse by subject → Click a question → Write helpful answer → Submit. Teachers can verify correct answers, and you earn reputation points!";
+    return "To answer questions: browse by subject, select a question, write a clear and helpful answer, then submit. Teachers may verify answers and you may earn reputation for useful contributions.";
   }
 
   // Greetings
@@ -196,19 +215,19 @@ const getFallbackResponse = (message) => {
     msg.includes("hey") ||
     msg.includes("greet")
   ) {
-    return "Hello! I'm EduBot, your AI study assistant for EduLink Uganda! 📚 I can help with Biology, Chemistry, Physics, Mathematics, and guide you through the platform. What do you need help with today?";
+    return "Hello. I am EduBot, the EduLink Uganda study assistant. I can assist with Biology, Chemistry, Physics, Mathematics, and provide guidance on using the platform. How may I assist you today?";
   }
 
   if (msg.includes("thank") || msg.includes("thanks")) {
-    return "You're welcome! Happy to help you learn. Feel free to ask more questions anytime! 😊";
+    return "You are welcome. I am glad to help. Please feel free to ask further questions if you need more assistance.";
   }
 
   if (msg.includes("help") || msg.includes("assist")) {
-    return "I'm here to assist! I can: 1) Explain academic concepts (Biology, Chemistry, Physics, Math), 2) Guide you on using EduLink, 3) Suggest study strategies. What would you like help with?";
+    return "I am here to assist. I can: 1) explain academic concepts (Biology, Chemistry, Physics, Mathematics), 2) guide you on using EduLink, and 3) suggest study strategies. What would you like help with?";
   }
 
   // Default response
-  return "I can help with Biology, Chemistry, Physics, Mathematics, or guide you through EduLink. Ask me a specific question, or let me know what subject you're studying! 📖";
+  return "I can help with Biology, Chemistry, Physics, Mathematics, or provide guidance on using EduLink. Please ask a specific question or tell me which subject you are studying.";
 };
 
 // Simple chatbot responses (can be replaced with OpenAI integration)
