@@ -40,9 +40,30 @@ const getAIResponse = async (message, context = "") => {
     // Initialize Gemini AI with fresh instance each time
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-    // Build prompt with context
-    const fullPrompt = context
-      ? `${SYSTEM_PROMPT}\n\nContext: ${context}\n\nStudent Question: ${message}`
+    // Format context for prompt: the frontend sends an array of messages
+    // like [{ role: 'user'|'assistant', content: '...'}]. Convert that into
+    // a readable transcript so the model can use it as conversational memory.
+    let contextText = "";
+    if (context) {
+      if (Array.isArray(context)) {
+        contextText = context
+          .map((m) => {
+            const who = m.role === "assistant" ? "Assistant" : "User";
+            return `${who}: ${m.content}`;
+          })
+          .join("\n");
+      } else if (typeof context === "object") {
+        // If a single object was passed, stringify useful fields
+        contextText = Object.entries(context)
+          .map(([k, v]) => `${k}: ${JSON.stringify(v)}`)
+          .join("\n");
+      } else {
+        contextText = String(context);
+      }
+    }
+
+    const fullPrompt = contextText
+      ? `${SYSTEM_PROMPT}\n\nConversation history:\n${contextText}\n\nStudent Question: ${message}`
       : `${SYSTEM_PROMPT}\n\nStudent Question: ${message}`;
 
     // Try a list of candidate models (in order). If one fails (404/503), fall back to the next.
