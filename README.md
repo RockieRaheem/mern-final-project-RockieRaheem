@@ -597,6 +597,13 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ---
 
+## Author / Project Lead
+
+- Author: Kamwanga Raheem
+- Contact: +256 704 057370 — kamwangaraheem2050@gmail.com
+- Built using knowledge gained from the Power Learn Project.
+- I am the developer of this project and welcome feedback or questions.
+
 ## 🙏 Acknowledgments
 
 - **PLP Academy** - For the MERN Stack Development course
