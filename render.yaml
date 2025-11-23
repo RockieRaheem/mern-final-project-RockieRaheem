@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: edulink-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Your MongoDB Atlas connection string (replace YOUR_PASSWORD_HERE with actual password from Atlas)
+      - key: MONGODB_URI
+        value: mongodb+srv://kamwangaraheem2050:vPlppoqkBzVwXlfZ@edulink.sfcbeon.mongodb.net/edulink-ug?appName=EduLink
+      # Secure JWT secret (generated randomly)
+      - key: JWT_SECRET
+        value: d6tFUIDRrR+TlJ6Dl+tMjifNel/+Zilcs7Lk2GR5hCc=
+      # Secure JWT refresh secret (generated randomly)
+      - key: JWT_REFRESH_SECRET
+        value: UssKkv72ZJHR9wFQ6IzXYLp+Q9kjTDKWdUmnBgBmPEU=
+      # Optional: Google Gemini API key for AI features (get from https://makersuite.google.com/app/apikey)
+      - key: GEMINI_API_KEY
+        value: AIzaSyCuDAcF9jnv4ejd-VJLoamt7T_d7cli7T0
+      # Frontend URL after Vercel deployment (update later)
+      - key: CLIENT_URL
+        value: https://mern-final-project-rockie-raheem.vercel.app/
