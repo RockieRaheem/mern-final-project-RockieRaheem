@@ -43,10 +43,16 @@ const httpServer = createServer(app);
 
 // Initialize Socket.IO
 // Allow multiple origins for Socket.IO
+const clientUrls = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(",").map((url) => url.trim())
+  : ["http://localhost:5173"];
 const allowedOrigins = [
-  process.env.CLIENT_URL || "http://localhost:5173",
+  ...clientUrls,
   "http://localhost:5174",
   "http://localhost:3000",
+  "https://mern-final-project-rockie-raheem.vercel.app",
+  "https://mern-final-project-rockie-rah-git-9008b3-rockieraheems-projects.vercel.app",
+  "https://mern-final-project-rockie-raheem-kv1zpariv.vercel.app",
 ];
 const io = new Server(httpServer, {
   cors: {
