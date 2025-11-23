@@ -22,4 +22,4 @@ services:
         value: AIzaSyCuDAcF9jnv4ejd-VJLoamt7T_d7cli7T0
       # Frontend URL after Vercel deployment (update later)
       - key: CLIENT_URL
-        value: https://mern-final-project-rockie-raheem.vercel.app/
+        value: https://mern-final-project-rockie-raheem-9ndvlrlqp.vercel.app
