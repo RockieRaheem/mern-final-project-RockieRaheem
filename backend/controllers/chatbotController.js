@@ -67,10 +67,10 @@ const getAIResponse = async (message, context = "") => {
 
     // Try a list of candidate models (in order). If one fails (404/503), fall back to the next.
     const candidateModels = [
-      "gemini-2.5-pro",
-      "gemini-2.5-flash",
-      "gemini-2.0-flash",
-      "gemini-2.0-flash-001",
+      "gemini-1.5-pro",
+      "gemini-1.5-flash",
+      "gemini-1.0-pro",
+      "gemini-pro",
     ];
 
     console.log(
