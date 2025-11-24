@@ -38,6 +38,9 @@ connectDB();
 // Initialize express app
 const app = express();
 
+// Trust proxy for rate limiting (important for Render deployment)
+app.set("trust proxy", 1);
+
 // Create HTTP server
 const httpServer = createServer(app);
 
